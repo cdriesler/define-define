@@ -1,0 +1,16 @@
+version: '3.6'
+services:
+  backend:
+    build: api
+    ports:
+      - "9020:80"
+  frontend:
+    build: app
+    ports:
+      - "9010:8080"
+    volumes:
+      - ./app:C:/src/app
+      - C:/src/app/node_modules
+volumes:
+  backend:
+  frontend:

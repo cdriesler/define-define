@@ -1,0 +1,37 @@
+# app
+
+.DS_Store
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# api
+
+obj/
+.vs/
+.git/
+bin/
+packages/
+*.csproj.user
+api/src/compute.client/python_client/compute_rhino3d.egg-info/
+api/src/compute.client/python_client/dist/
+*.pyc
+
