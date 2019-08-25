@@ -131,6 +131,7 @@
     <Compile Include="IO\Utilities.cs" />
     <Compile Include="IO\Schema.cs" />
     <Compile Include="Logging.cs" />
+    <Compile Include="Predicates\Test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="RhinoCompute.cs" />
