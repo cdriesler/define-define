@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino.Geometry;
 
-namespace compute.geometry.Models
+namespace compute.geometry
 {
     public class DrawingMaster
     {
@@ -14,6 +14,8 @@ namespace compute.geometry.Models
         public Curve EdgeLeftBehind { get; set; }
         public Curve EdgeRightFront { get; set; }
         public Curve EdgeRightBehind { get; set; }
+
+        public double SeparationDistance { get; set; }
 
         // Constructor
         public DrawingMaster()
@@ -31,6 +33,16 @@ namespace compute.geometry.Models
         public void UpdateLeftAboveEdge(Curve curve)
         {
 
+        }
+
+        public void UpdateSeparationDistance(double newDistance)
+        {
+            if (newDistance > 30)
+            {
+                newDistance = 30;
+            }
+
+            SeparationDistance = newDistance;
         }
 
 
