@@ -15,6 +15,16 @@ namespace compute.geometry
             Get["servertime"] = _ => ServerTime(Context);
             Get["sdk/csharp"] = _ => CSharpSdk(Context);
             Post["hammertime"] = _ => HammerTime(Context);
+            Post["/u/separationdistance"] = _ => OnUpdateSeparationDistance(Context);
+        }
+
+        static Response OnUpdateSeparationDistance(NancyContext ctx)
+        {
+            var dwg = new DrawingMaster();
+
+            dwg.UpdateSeparationDistance(ctx.request.body);
+
+            return dwg.Compose();
         }
 
         static Response HomePage(NancyContext ctx)
