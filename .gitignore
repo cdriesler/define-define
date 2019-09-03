@@ -34,3 +34,12 @@ api/src/compute.client/python_client/compute_rhino3d.egg-info/
 api/src/compute.client/python_client/dist/
 *.pyc
 
+# app
+
+dist/
+.firebaserc
+firebase.json
+
+# fct
+
+fct/lib
