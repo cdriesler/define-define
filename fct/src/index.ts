@@ -10,7 +10,7 @@ import * as cors from 'cors';
 
 admin.initializeApp(functions.config().firebase);
 
-const db = admin.firestore();
+// const db = admin.firestore();
 
 const app = express();
 const main = express();
@@ -32,11 +32,5 @@ export const api = functions.https.onRequest(main);
 
 // Get all registered routes
 app.get('/', (req, res) => {
-    db.collection('drawings').doc('6RhW4SFkP77joXssta3X').collection('layers').doc('pjTr2xIZyOIQPBO3hsez').get()
-        .then(x => {
-            res.status(200).send(x.get("coordinates"));
-        })
-        .catch(error => {
-            res.status(400).send(error);
-        })
+    res.status(200).json({message: "Under construction."});
 });

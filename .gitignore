@@ -39,6 +39,7 @@ api/src/compute.client/python_client/dist/
 dist/
 .firebaserc
 firebase.json
+.firebase/
 
 # fct
 

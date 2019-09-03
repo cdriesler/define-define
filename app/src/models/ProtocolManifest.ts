@@ -10,7 +10,7 @@ export interface ProtocolStatement {
 export const ProtocolManifest:ProtocolStatement[] = [
     {
         title: "Statement 01: Massing",
-        statement: "This drawing represents two (adjacent) (open) volumetric (surfaces).",
+        statement: "This drawing represents two adjacent and open volumetric surfaces",
         overrides: [
             {
                 word: "adjacent",
@@ -28,16 +28,30 @@ export const ProtocolManifest:ProtocolStatement[] = [
     },
     {
         title: "Statement 02: Connection",
-        statement: "The surfaces connect via disjoint (extensions) of (large) edges.",
+        statement: "The surfaces connect via disjoint extensions of large edges",
         overrides: [
-
+            {
+                word: "disjoint",
+                type: "curve__connect"
+            },
+            {
+                word: "large",
+                type: "number__slider"
+            }
         ]
     },
     {
         title: "Statement 03: Texture",
-        statement: "These surfaces are (porous) and (corrugated).",
+        statement: "These surfaces are porous and corrugated",
         overrides: [
-
+            {
+                word: "porous",
+                type: "area__erasure"
+            },
+            {
+                word: "corrugated",
+                type: "curve__parallel"
+            }
         ]
     }
 
