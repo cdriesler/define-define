@@ -13,14 +13,14 @@ using Nancy.TinyIoc;
 using Serilog;
 using Topshelf;
 
-namespace compute.geometry
+namespace Define.Api
 {
     class Program
     {
         static void Main(string[] args)
         {
             Logging.Init();
-            int backendPort = Env.GetEnvironmentInt("COMPUTE_BACKEND_PORT", 8081);
+            int backendPort = 8081;
 
             Topshelf.HostFactory.Run(x =>
             {
@@ -35,10 +35,10 @@ namespace compute.geometry
                   });
                 x.RunAsPrompt();
                 //x.RunAsLocalService();
-                x.SetDisplayName("compute.geometry");
-                x.SetServiceName("compute.geometry");
+                x.SetDisplayName("Define Protocol");
+                x.SetServiceName("Define.Api");
             });
-            RhinoLib.ExitInProcess();
+            Startup.ExitInProcess();
         }
     }
 
@@ -50,7 +50,7 @@ namespace compute.geometry
         public void Start(int http_port)
         {
             Log.Information("Launching RhinoCore library as {User}", Environment.UserName);
-            RhinoLib.LaunchInProcess(RhinoLib.LoadMode.Headless, 0);
+            Startup.LaunchInProcess(Startup.LoadMode.Headless, 0);
             var config = new HostConfiguration();
 #if DEBUG
             config.RewriteLocalhost = false;  // Don't require URL registration since geometry service always runs on localhost
@@ -68,7 +68,7 @@ namespace compute.geometry
             {
                 _nancyHost.Start();
                 foreach (var uri in listenUriList)
-                    Log.Information("compute.geometry running on {Uri}", uri.OriginalString);
+                    Log.Information("Define-Define Protocol running on {Uri}", uri.OriginalString);
             }
             catch (AutomaticUrlReservationCreationFailureException)
             {
@@ -145,61 +145,6 @@ namespace compute.geometry
             string id = ctx.Request.Headers["X-Compute-Id"].FirstOrDefault();
             Log.Error(ex, "An exception occured while processing request \"{RequestId}\"", id);
             return null;
-        }
-    }
-
-    public class RhinoGetModule : NancyModule
-    {
-        public RhinoGetModule(IRouteCacheProvider routeCacheProvider)
-        {
-            Get["/sdk"] = _ =>
-            {
-                var result = new StringBuilder("<!DOCTYPE html><html><body>");
-                var cache = routeCacheProvider.GetCache();
-                result.AppendLine($" <a href=\"/sdk/csharp\">C# SDK</a><BR>");
-                result.AppendLine("<p>API<br>");
-
-                int route_index = 0;
-                foreach (var module in cache)
-                {
-                    foreach (var route in module.Value)
-                    {
-                        var method = route.Item2.Method;
-                        var path = route.Item2.Path;
-                        if (method == "GET")
-                        {
-                            route_index += 1;
-                            result.AppendLine($"{route_index} <a href='{path}'>{path}</a><BR>");
-                        }
-                    }
-                }
-
-                result.AppendLine("</p></body></html>");
-                return result.ToString();
-            };
-
-            foreach(var endpoint in GeometryEndPoint.AllEndPoints)
-            {
-                string key = endpoint.PathURL;
-                Get[key] = _ => endpoint.Get(Context);
-            }
-        }
-    }
-
-    public class RhinoPostModule : NancyModule
-    {
-        public RhinoPostModule(IRouteCacheProvider routeCacheProvider)
-        {
-            foreach (var endpoint in GeometryEndPoint.AllEndPoints)
-            {
-                string key = endpoint.PathURL;
-                Post[key] = _ =>
-                {
-                    var r = endpoint.Post(Context);
-                    r.ContentType = "application/json";
-                    return r;
-                };
-            }
         }
     }
 }

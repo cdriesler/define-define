@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Nancy;
+using Nancy.Extensions;
 
-namespace compute.geometry
+namespace Define.Api
 {
     public class FixedEndPointsModule : NancyModule
     {
@@ -20,11 +21,7 @@ namespace compute.geometry
 
         static Response OnUpdateSeparationDistance(NancyContext ctx)
         {
-            var dwg = new DrawingMaster();
-
-            dwg.UpdateSeparationDistance(ctx.request.body);
-
-            return dwg.Compose();
+            return null;
         }
 
         static Response HomePage(NancyContext ctx)

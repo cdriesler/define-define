@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-class RhinoLib
+class Startup
 {
     public enum LoadMode : int
     {
         Headless = 0,
         FullUserInterface = 1
     }
-    static RhinoLib()
+    static Startup()
     {
         Init();
     }

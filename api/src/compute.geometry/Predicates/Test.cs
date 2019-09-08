@@ -8,7 +8,7 @@ using Nancy.Extensions;
 using Newtonsoft.Json;
 using Rhino.Geometry;
 
-namespace compute.geometry
+namespace Define.Api
 {
     public class Test : NancyModule
     {

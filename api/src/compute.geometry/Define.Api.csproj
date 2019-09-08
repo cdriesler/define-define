@@ -35,7 +35,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Cloud.Firestore" Version="1.0.0-beta19" />
     <Reference Include="AWSSDK.CloudWatchLogs, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
       <HintPath>..\packages\AWSSDK.CloudWatchLogs.3.3.4.10\lib\net45\AWSSDK.CloudWatchLogs.dll</HintPath>
     </Reference>
@@ -123,28 +122,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataCache.cs" />
-    <Compile Include="Environment.cs" />
-    <Compile Include="FixedEndpoints.cs" />
-    <Compile Include="GeometryEndPoint.cs" />
-    <Compile Include="IO\GhPath.cs" />
-    <Compile Include="IO\GHTypeCodes.cs" />
-    <Compile Include="IO\Utilities.cs" />
-    <Compile Include="IO\Schema.cs" />
+    <Compile Include="Endpoints.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Models\DrawingMaster.cs" />
     <Compile Include="Predicates\Test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="RhinoCompute.cs" />
-    <Compile Include="ResthopperEndpoints.cs" />
-    <Compile Include="RhinoLib.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="deployment\headless_admin.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

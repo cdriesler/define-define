@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino.Geometry;
 
-namespace compute.geometry
+namespace Define.Api
 {
     public class DrawingMaster
     {
