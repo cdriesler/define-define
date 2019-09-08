@@ -1,7 +1,7 @@
 <template>
     <div id="protocol" :class="{inactive: activeOverrides.length > 0 , active: activeOverrides.length == 0}">
         <div v-for="statement in manifest" :key="statement.statement" class="statement">
-            <div class="statement__title" 
+            <div class="statement__title" ref="c"
             :class="{active: statement.statement.split(' ').includes(activeOverrides.length > 0 ? activeOverrides[0] : 'never'), inactive: activeOverrides.length > 0 && !statement.statement.split(' ').includes(activeOverrides[0])}"
             @click="onToggleStatement(statement.index)">
                 <div class="statement__title__index" :class="{inactive: activeOverrides.length > 0 && !statement.statement.split(' ').includes(activeOverrides[0])}">
@@ -27,6 +27,7 @@
                         <protocol-override 
                         :label="word" 
                         :inputType="statement.overrides.find(x => x.word == word).type"
+                        :w="currentSize"
                         @cancel="onCancel"></protocol-override>
                     </div>
                 </div>
@@ -162,6 +163,11 @@ export default Vue.extend({
     },
     mounted() {
         this.manifest = ProtocolManifest;
+    },
+    computed: {
+        currentSize(): number {
+            return (<Element>this.$refs.c).clientWidth;
+        }
     },
     methods: {
         toggleOverride(word: string): void {
