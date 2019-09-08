@@ -12,7 +12,7 @@ export const ProtocolManifest:ProtocolStatement[] = [
     {
         index: "00",
         title: "Intent",
-        statement: "This project is a protocol for the creation of some drawing. You are asked to override definitions by clicking on words like this in our specification below.",
+        statement: "This project is a protocol for the creation of some drawing. Click words like this to override our definitions and alter the final output.",
         overrides: [
             {
                 word: "this",
