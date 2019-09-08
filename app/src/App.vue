@@ -1,5 +1,5 @@
 <template>
-  <div class="app">
+  <div class="app" id="app">
     <div class="header">
       DEFINE-DEFINE
     </div>
@@ -8,7 +8,7 @@
     </div>
     <div class="footer">
       <div class="footer__version">
-        V0.2.6
+        V0.2.8
       </div>
        UID: XXXX
     </div>

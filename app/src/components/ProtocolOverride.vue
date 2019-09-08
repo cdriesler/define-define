@@ -43,6 +43,12 @@
     }
 }
 
+.inputpath {
+    animation-name: appear;
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+}
+
 .input {
     width: 800px;
     max-width: calc(100vw - 30px);
@@ -115,6 +121,7 @@ export default Vue.extend({
             coords: [] as number[][],
             activePath: [] as number[],
             size: 0,
+            drawing: {},
         }
     },
     mounted() {
@@ -124,18 +131,38 @@ export default Vue.extend({
     computed: {
         svgarPaths(): string {
             let dwg = new Svgar.Drawing("inputs");
+
             let layer = new Svgar.Layer("lines").AddTag("main");
             let style = new Svgar.State("default").AddStyle(new Svgar.StyleBuilder("bw").Fill("none").StrokeWidth("2px").Stroke("#000000").Build()).Target("bw", "main");
 
-            this.coords.forEach(x => {
+            for(let i = 0; i < this.coords.length; i++) {
+                let x = this.coords[i];
                 let crv = new Svgar.PolylineBuilder([x[0], x[1]])
-                for(let i = 2; i < x.length; i+=2) {
-                    crv.LineTo([x[i], x[i+1]])
+                for(let j = 2; j < x.length; j+=2) {
+                    crv.LineTo([x[j], x[j+1]]);
                 }
-                layer.AddGeometry(crv.Build());
-            })
+
+                let geo = crv.Build();
+
+                if (i >= (<Svgar.Drawing>this.drawing).Layers[0].Geometry.length) {
+                    geo.AddTag("inputpath");
+                }
+
+                layer.AddGeometry(geo);
+            }
+
+            // if (this.activePath.length >= 4) {
+            //     const c = this.activePath;
+            //     let current = new Svgar.PolylineBuilder([c[0], c[1]]);
+            //     for (let i = 2; i < c.length; i+=2) {
+            //         current.LineTo([c[i], c[i+1]]);
+            //     }
+            //     layer.AddGeometry(current.Build());
+            // }
 
             dwg.AddLayer(layer).AddState(style);
+
+            this.drawing = dwg;
 
             return dwg.Compile("default", this.size, this.size);
         },
@@ -164,11 +191,16 @@ export default Vue.extend({
                 this.activePath.push(coord[0]);
                 this.activePath.push(coord[1]);
             }
+
+            //disableBodyScroll(this.app);
         },
         onMove(event: TouchEvent): void {
             this.count++;
 
-            if (this.count > 3) {
+            event.preventDefault()
+            event.stopPropagation()
+
+            if (this.count > 1) {
                 this.count = 0;
                 //Log new coordinate
                 let coord = this.touchEventToNormalizedCoordinate(event);
@@ -180,10 +212,10 @@ export default Vue.extend({
             }
         },
         onUp(event: TouchEvent): void {
-            console.log(this.activePath);
-
             this.coords.push(this.activePath);
             this.activePath = [];
+
+            //enableBodyScroll(this.app);
         }
     }
 })
