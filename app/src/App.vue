@@ -1,31 +1,83 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div class="app">
+    <div class="header">
+      define-define
     </div>
-    <router-view/>
+    <div class="content">
+      <router-view/>
+    </div>
+    <div class="footer">
+      VERSION: 0.1.2 &nbsp; UID: XXXX
+    </div>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  font-family: 'Quantico', sans-serif;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
+  text-align: left;
+  color: black;
+
+  overflow-y: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  height: 100vh;
 }
 
-#nav a {
+.header {
+  height: 25px;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+
+  line-height: 25px;
+  vertical-align: middle;
+  font-size: 12px;
   font-weight: bold;
-  color: #2c3e50;
+
+  width: calc(100% - 34px);
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: center;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.content {
+  width: calc(100% - 30px);
+  margin-left: 15px;
+  margin-right: 15px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.footer {
+  height: 25px;
+
+  font-family: 'Consolas', sans-serif;
+  font-size: 10px;
+  line-height: 25px;
+
+  width: calc(100% - 39px);
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-left: 5px;
+
+  background: white;
+
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+  border-left: 2px solid black;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 </style>
