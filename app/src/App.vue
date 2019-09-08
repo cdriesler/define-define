@@ -1,13 +1,16 @@
 <template>
   <div class="app">
     <div class="header">
-      define-define
+      DEFINE-DEFINE
     </div>
     <div class="content">
       <router-view/>
     </div>
     <div class="footer">
-      VERSION: 0.1.2 &nbsp; UID: XXXX
+      <div class="footer__version">
+        V0.2.4
+      </div>
+       UID: XXXX
     </div>
   </div>
 </template>
@@ -30,7 +33,7 @@
   flex-direction: column;
   justify-content: flex-start;
 
-  height: 100vh;
+  height: calc(100vh - 25px);
 }
 
 .header {
@@ -38,18 +41,17 @@
   border-bottom: 2px solid black;
   border-left: 2px solid black;
   border-right: 2px solid black;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
 
   line-height: 25px;
   vertical-align: middle;
   font-size: 12px;
   font-weight: bold;
 
-  width: calc(100% - 34px);
+  width: calc(100% - 39px);
+  padding-left: 5px;
   margin-left: 15px;
   margin-right: 15px;
-  text-align: center;
+  text-align: left;
 }
 
 .content {
@@ -63,8 +65,15 @@
 .footer {
   height: 25px;
 
-  font-family: 'Consolas', sans-serif;
-  font-size: 10px;
+  position: absolute;
+  bottom: 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  font-size: 12px;
+  font-weight: bold;
   line-height: 25px;
 
   width: calc(100% - 39px);
@@ -77,7 +86,14 @@
   border-top: 2px solid black;
   border-right: 2px solid black;
   border-left: 2px solid black;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+
+  z-index: 100;
+}
+
+.footer__version {
+  height: 100%;
+  border-right: 2px solid black;
+  padding-right: 5px;
+  margin-right: 5px;
 }
 </style>

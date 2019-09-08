@@ -1,5 +1,6 @@
 export interface ProtocolStatement {
     title: string;
+    index: string;
     statement: string;
     overrides: {
         word: string,
@@ -9,8 +10,20 @@ export interface ProtocolStatement {
 
 export const ProtocolManifest:ProtocolStatement[] = [
     {
-        title: "Statement 01: Massing",
-        statement: "This drawing represents two adjacent and open volumetric surfaces",
+        index: "00",
+        title: "Intent",
+        statement: "This project is a protocol for the creation of some drawing. You are asked to override definitions by clicking on words like this in our specification below.",
+        overrides: [
+            {
+                word: "this",
+                type: "text"
+            }
+        ]
+    },
+    {
+        index: "01",
+        title: "Massing",
+        statement: "The drawing represents two adjacent and open volumetric surfaces.",
         overrides: [
             {
                 word: "adjacent",
@@ -20,15 +33,12 @@ export const ProtocolManifest:ProtocolStatement[] = [
                 word: "open",
                 type: "curve__nonvertical"
             },
-            {
-                word: "surfaces",
-                type: "text"
-            }
         ]
     },
     {
-        title: "Statement 02: Connection",
-        statement: "The surfaces connect via disjoint extensions of large edges",
+        index: "02",
+        title: "Connection",
+        statement: "The surfaces connect via disjoint extensions of large edges.",
         overrides: [
             {
                 word: "disjoint",
@@ -41,15 +51,16 @@ export const ProtocolManifest:ProtocolStatement[] = [
         ]
     },
     {
-        title: "Statement 03: Texture",
-        statement: "These surfaces are porous and corrugated",
+        index: "03",
+        title: "Texture",
+        statement: "These surfaces are porous and have parallel ridges.",
         overrides: [
             {
                 word: "porous",
                 type: "area__erasure"
             },
             {
-                word: "corrugated",
+                word: "parallel",
                 type: "curve__parallel"
             }
         ]
