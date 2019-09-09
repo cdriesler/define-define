@@ -55,12 +55,11 @@ app.get('/handshake', (req, res) => {
 app.post('/in/:id', (req, res) => {
     //db.collection("input_cache").doc(req.params.id)
     var val: number;
-    var manifest: any;
+    var id: string;
     axios.default.post(`${process.env.API_URL}/in/${req.params.id}`, {paths: req.body["paths"]})
     .then(r => {
         // Get measurement from rhino api
-        console.log(r);
-        val = +r.data["measurement"];
+        val = +r.data;
 
         return db.collection("input_cache").doc(req.params.id).get();
     })
@@ -78,8 +77,14 @@ app.post('/in/:id', (req, res) => {
 
         keep.push(val);
 
+        let total: number = 0;
+
+        keep.forEach(x => {
+            total = total + x;
+        })
+
         let newdoc = {
-            current: keep.reduce(function(a, b) { return a + b; }) / cache.length,
+            current: total / cache.length,
             cache: keep,
         }
 
@@ -94,21 +99,27 @@ app.post('/in/:id', (req, res) => {
         docs.forEach(doc => {
             inputs.push(doc.get());
         });
+
         return Promise.all(inputs);
     })
     .then(inputs => {
         // Parse current values from cache
+        let manifest:any = {};
+
         inputs.forEach(x => {
-            manifest[x.id] = +x.get("current")
+            manifest[x.id] = x.get("current");
         });
 
-        manifest["timestamp"] = new Date();
+        id = db.collection("input_history").doc().id;
 
-        return db.collection("input_history").doc().set(manifest);
+        return db.collection("input_history").doc(id).set(manifest);
     })
     .then(doc => {
         // Store manifest in history and return to frontend
-        res.status(200).json(manifest);
+        return db.collection("input_history").doc(id).get();
+    })
+    .then(end => {
+        res.status(200).json(end.data());
     })
     .catch(err => {
         res.status(400).json(err);
