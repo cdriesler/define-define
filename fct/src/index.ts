@@ -37,5 +37,6 @@ app.get('/', (req, res) => {
 
 // Store input data and returned packaged input manifest
 app.post('/in/:id', (req, res) => {
+    //db.collection("input_cache").doc(req.params.id)
     res.status(200).json({type: req.params.id, data: req.body["paths"].length});
 })

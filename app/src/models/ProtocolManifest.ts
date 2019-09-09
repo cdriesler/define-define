@@ -17,8 +17,8 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "this",
-                eid: "text",
-                instructions: "Nothing to override here, sorry",
+                eid: "tutorial",
+                instructions: "draw anything; this one does nothing",
             }
         ]
     },
@@ -29,12 +29,12 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "adjacent",
-                eid: "number__slider",
+                eid: "adjacent",
                 instructions: "draw two lines that are relatively close"
             },
             {
                 word: "open",
-                eid: "curve__nonvertical",
+                eid: "openings",
                 instructions: "draw an open angle from two lines"
             },
         ]
@@ -46,12 +46,12 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "disjoint",
-                eid: "curve__connect",
+                eid: "disjoint",
                 instructions: "draw two completely unrelated lines"
             },
             {
                 word: "large",
-                eid: "number__slider",
+                eid: "largethreshold",
                 instructions: "draw a large line"
             }
         ]
@@ -63,12 +63,12 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "porous",
-                eid: "area__erasure",
+                eid: "relativearea",
                 instructions: "draw a small shape inside a big shape",
             },
             {
                 word: "parallel",
-                eid: "curve__parallel",
+                eid: "parallel",
                 instructions: "draw two parallel lines",
             }
         ]
