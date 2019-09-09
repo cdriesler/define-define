@@ -20,7 +20,7 @@ namespace Define.Api
         static void Main(string[] args)
         {
             Logging.Init();
-            int backendPort = 8081;
+            int backendPort = 9090;
 
             Topshelf.HostFactory.Run(x =>
             {
