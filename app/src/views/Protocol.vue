@@ -26,7 +26,7 @@
                     <div v-if="activeOverrides.includes(word)">
                         <protocol-override 
                         :label="word" 
-                        :inputType="statement.overrides.find(x => x.word == word).type"
+                        :eid="statement.overrides.find(x => x.word == word).eid"
                         :w="currentSize"
                         :instructions="statement.overrides.find(x => x.word == word).instructions"
                         @cancel="onCancel"></protocol-override>

@@ -23,7 +23,7 @@
             <div class="actions__button divider" @click="onReset">
                 RESET
             </div>
-            <div class="actions__button divider">
+            <div class="actions__button divider" @click="onDeploy">
                 SUBMIT
             </div>
         </div>
@@ -130,7 +130,7 @@ import * as Svgar from 'svgar';
 
 export default Vue.extend({
     name: "p-override",
-    props: ["label", "inputType", "w", "instructions"],
+    props: ["label", "eid", "w", "instructions"],
     data() {
         return {
             renderPath: {},
@@ -141,6 +141,7 @@ export default Vue.extend({
             activePath: [] as number[],
             size: 0,
             drawing: {},
+            uri: "https://us-central1-define-define.cloudfunctions.net/api/v1",
         }
     },
     mounted() {
@@ -195,6 +196,12 @@ export default Vue.extend({
         },
         onToggleDefine(): void {
             this.showDefine = !this.showDefine;
+        },
+        onDeploy(): void {
+            this.$http.post(this.uri + '/in/' + this.eid, 
+            {paths: (<Svgar.Drawing>this.drawing).Layers[0].Geometry.map(x => x.Coordinates.map(y => +y.toFixed(4)))})
+            .then(res => console.log(res))
+            .catch(error => console.log(error));
         },
         touchEventToNormalizedCoordinate(event: TouchEvent): number[] {
             if (event.targetTouches.length <= 0) {

@@ -34,3 +34,8 @@ export const api = functions.https.onRequest(main);
 app.get('/', (req, res) => {
     res.status(200).json({message: "Under construction."});
 });
+
+// Store input data and returned packaged input manifest
+app.post('/in/:id', (req, res) => {
+    res.status(200).json({type: req.params.id, data: req.body["paths"].length});
+})
