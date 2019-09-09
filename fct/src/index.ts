@@ -65,8 +65,19 @@ app.post('/in/:id', (req, res) => {
     })
     .then(doc => {
         // Construct new doc for current input with given data
-        let cache: number[] = doc.get("cache");
+        let cache: number[];
         let keep: number[] = [];
+
+        if (doc == undefined) {
+            cache = [];
+        }
+        else {
+            cache = doc.get("cache");
+        }
+
+        if (cache == undefined) {
+            cache = [];
+        }
 
         if (cache.length >= 10) {
             keep = cache.slice(1, 10);
