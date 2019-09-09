@@ -200,10 +200,14 @@ export default Vue.extend({
             this.showDefine = !this.showDefine;
         },
         onDeploy(): void {
-            this.$http.post(this.uri + '/in/' + this.eid, 
+            let destination = `${this.uri}/in/${this.eid}`
+            this.$http.post(destination, 
             {paths: (<Svgar.Drawing>this.drawing).Layers[0].Geometry.map(x => x.Coordinates.map(y => +y.toFixed(4)))})
             .then(res => console.log(res))
-            .catch(error => console.log(error));
+            .catch(error => {
+                console.log(destination);
+                console.log(error);
+            });
         },
         touchEventToNormalizedCoordinate(event: TouchEvent): number[] {
             if (event.targetTouches.length <= 0) {

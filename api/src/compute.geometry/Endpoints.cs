@@ -18,13 +18,11 @@ namespace Define.Api
             Get["sdk/csharp"] = _ => CSharpSdk(Context);
             Post["hammertime"] = _ => HammerTime(Context);
             Post["/u/separationdistance"] = _ => OnUpdateSeparationDistance(Context);
-            Post["/in/:inputtype"] = _ => OnMeasureInput(Context);
+            Post["/in/{type}"] = param => OnMeasureInput(Context, param.type);
         }
 
-        static Response OnMeasureInput(NancyContext ctx)
+        static Response OnMeasureInput(NancyContext ctx, string type)
         {
-            var type = ctx.Parameters["inputtype"];
-
             var measurement = 0.55;
 
             return JsonConvert.SerializeObject(measurement);

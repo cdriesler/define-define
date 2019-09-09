@@ -59,6 +59,7 @@ app.post('/in/:id', (req, res) => {
     axios.default.post(`${process.env.API_URL}/in/${req.params.id}`, {paths: req.body["paths"]})
     .then(r => {
         // Get measurement from rhino api
+        console.log(r);
         val = +r.data["measurement"];
 
         return db.collection("input_cache").doc(req.params.id).get();
