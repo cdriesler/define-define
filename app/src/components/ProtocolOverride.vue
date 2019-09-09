@@ -141,12 +141,14 @@ export default Vue.extend({
             activePath: [] as number[],
             size: 0,
             drawing: {},
-            uri: "https://us-central1-define-define.cloudfunctions.net/api/v1",
+            uri: "",
         }
     },
     mounted() {
         let el = (<Element>this.$refs.cv);
         this.size = el == undefined ? 0 : el.clientWidth;
+
+        this.uri = process.env.VUE_APP_FCT_URL;
     },
     computed: {
         svgarPaths(): string {

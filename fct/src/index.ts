@@ -5,6 +5,10 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 
 import * as cors from 'cors';
+import * as axios from 'axios';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 // import { PolylineBuilder } from 'svgar';
 
@@ -34,6 +38,18 @@ export const api = functions.https.onRequest(main);
 app.get('/', (req, res) => {
     res.status(200).json({message: "Under construction."});
 });
+
+// Test handshake with rhino api
+app.get('/handshake', (req, res) => {
+    console.log(`${process.env.API_URL}/version`);
+    axios.default.get(`${process.env.API_URL}/version`)
+    .then(r => {
+        res.status(200).json(r.data);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    });
+})
 
 // Store input data and returned packaged input manifest
 app.post('/in/:id', (req, res) => {

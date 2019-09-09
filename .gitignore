@@ -44,3 +44,4 @@ firebase.json
 # fct
 
 fct/lib
+*.env
