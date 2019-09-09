@@ -8,9 +8,9 @@
     </div>
     <div class="footer">
       <div class="footer__version">
-        V0.2.8
+        V0.3.0
       </div>
-       UID: XXXX
+       UID: {{uid}}
     </div>
   </div>
 </template>
@@ -38,6 +38,7 @@
 
 .header {
   height: 25px;
+  border-top: 2px solid black;
   border-bottom: 2px solid black;
   border-left: 2px solid black;
   border-right: 2px solid black;
@@ -97,3 +98,19 @@
   margin-right: 5px;
 }
 </style>
+
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  data() {
+    return {
+      uid: "",
+    }
+  },
+  mounted() {
+    let uid = Math.round(Math.random() * 10000).toString();
+    this.$store.commit("setUid", uid)
+    this.uid = this.$store.state.uid;
+  }
+})
+</script>

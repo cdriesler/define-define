@@ -2,6 +2,7 @@
     <div id="override">
         <div 
         class="input" 
+        :class="{'definition': showDefine == true}"
         ref="cv"
         @mousedown="onDown"
         @mousemove="onMove"
@@ -9,17 +10,21 @@
         @touchstart="onDown"
         @touchmove="onMove"
         @touchend="onUp"
-        v-html="svgarPaths">
+        >
+        <div v-html="svgarPaths" v-if="showDefine == false"></div>
         </div> 
+        <div class="definition">
+            {{instructions.toUpperCase()}}
+        </div>
         <div class="actions">
-            <div class="actions--cancel" @click="onCancel">
-                cancel
+            <div class="actions__button" @click="onCancel">
+                CANCEL
             </div>
-            <div class="actions--define">
-                ?
+            <div class="actions__button divider" @click="onReset">
+                RESET
             </div>
-            <div class="actions--submit">
-                submit
+            <div class="actions__button divider">
+                SUBMIT
             </div>
         </div>
     </div>
@@ -49,6 +54,31 @@
     animation-fill-mode: forwards;
 }
 
+.definition {
+    width: 800px;
+    max-width: calc(100vw - 34px);
+    height: 25px;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+
+    text-align: center;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 25px;
+    vertical-align: middle;
+}
+
+
+.definition__statement {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    color: white;
+}
+
 .input {
     width: 800px;
     max-width: calc(100vw - 30px);
@@ -63,46 +93,34 @@
 
 .actions {
     width: 800px;
-    max-width: calc(100vw - 30px);
+    max-width: calc(100vw - 34px);
     height: 25px;
-    box-sizing: border-box;
-
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    border-bottom: 2px solid black;
 
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
 
     margin-bottom: 15px;
 
     color: black;
     font-size: 12px;
-    line-height: 23px;
+    font-weight: bold;
+    line-height: 25px;
     vertical-align: middle;
     text-align: center;
-}
 
-.actions--cancel {
-    flex-grow: 1;
-
-    height: 100%;
-}
-
-.actions--define {
-    flex-grow: 1;
-
-    height: 100%;
-
+    border-bottom: 2px solid black;
     border-right: 2px solid black;
     border-left: 2px solid black;
 }
 
-.actions--submit {
+.actions__button {
     flex-grow: 1;
-
     height: 100%;
+}
+
+.divider {
+    border-left: 2px solid black;
 }
 </style>
 
@@ -112,10 +130,11 @@ import * as Svgar from 'svgar';
 
 export default Vue.extend({
     name: "p-override",
-    props: ["label", "inputType", "w"],
+    props: ["label", "inputType", "w", "instructions"],
     data() {
         return {
             renderPath: {},
+            showDefine: false,
             svg: {},
             count: 0,
             coords: [] as number[][],
@@ -171,13 +190,19 @@ export default Vue.extend({
         onCancel(): void {
             this.$emit("cancel");
         },
+        onReset(): void {
+            this.coords = [];
+        },
+        onToggleDefine(): void {
+            this.showDefine = !this.showDefine;
+        },
         touchEventToNormalizedCoordinate(event: TouchEvent): number[] {
             if (event.targetTouches.length <= 0) {
                 return [];
             }
 
             let t = event.targetTouches[0];
-            let div: DOMRect = (<any>event).path[1].getBoundingClientRect();
+            let div: DOMRect = (<any>event).target.getBoundingClientRect();
 
             let x = (t.pageX - div.left) / div.width;
             let y = 1 - ((t.pageY - div.top) / div.height);

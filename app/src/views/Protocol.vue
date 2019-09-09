@@ -12,7 +12,7 @@
                 </div>   
             </div>
             <div v-show="activeStatements.includes(statement.index)" class="statement__body">
-                <div v-for="word in statement.statement.split(' ')" :key="word">
+                <div v-for="(word, index) in statement.statement.split(' ')" :key="word + index">
                     <span 
                     v-if="statement.overrides.map(x => x.word).includes(word)" 
                     class="statement__body--override statement__body__word" 
@@ -28,6 +28,7 @@
                         :label="word" 
                         :inputType="statement.overrides.find(x => x.word == word).type"
                         :w="currentSize"
+                        :instructions="statement.overrides.find(x => x.word == word).instructions"
                         @cancel="onCancel"></protocol-override>
                     </div>
                 </div>

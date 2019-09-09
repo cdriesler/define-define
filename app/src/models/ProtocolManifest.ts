@@ -4,7 +4,8 @@ export interface ProtocolStatement {
     statement: string;
     overrides: {
         word: string,
-        type: string,
+        eid: string,
+        instructions: string,
     }[]
 }
 
@@ -16,7 +17,8 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "this",
-                type: "text"
+                eid: "text",
+                instructions: "Nothing to override here, sorry",
             }
         ]
     },
@@ -27,11 +29,13 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "adjacent",
-                type: "number__slider"
+                eid: "number__slider",
+                instructions: "draw two lines that are relatively close"
             },
             {
                 word: "open",
-                type: "curve__nonvertical"
+                eid: "curve__nonvertical",
+                instructions: "draw an open angle from two lines"
             },
         ]
     },
@@ -42,11 +46,13 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "disjoint",
-                type: "curve__connect"
+                eid: "curve__connect",
+                instructions: "draw two completely unrelated lines"
             },
             {
                 word: "large",
-                type: "number__slider"
+                eid: "number__slider",
+                instructions: "draw a large line"
             }
         ]
     },
@@ -57,11 +63,13 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "porous",
-                type: "area__erasure"
+                eid: "area__erasure",
+                instructions: "draw a small shape inside a big shape",
             },
             {
                 word: "parallel",
-                type: "curve__parallel"
+                eid: "curve__parallel",
+                instructions: "draw two parallel lines",
             }
         ]
     }
