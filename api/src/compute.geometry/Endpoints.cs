@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Nancy;
 using Nancy.Extensions;
+using Newtonsoft.Json;
 
 namespace Define.Api
 {
@@ -17,6 +18,16 @@ namespace Define.Api
             Get["sdk/csharp"] = _ => CSharpSdk(Context);
             Post["hammertime"] = _ => HammerTime(Context);
             Post["/u/separationdistance"] = _ => OnUpdateSeparationDistance(Context);
+            Post["/in/:inputtype"] = _ => OnMeasureInput(Context);
+        }
+
+        static Response OnMeasureInput(NancyContext ctx)
+        {
+            var type = ctx.Parameters["inputtype"];
+
+            var measurement = 0.55;
+
+            return JsonConvert.SerializeObject(measurement);
         }
 
         static Response OnUpdateSeparationDistance(NancyContext ctx)
