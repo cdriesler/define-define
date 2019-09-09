@@ -7,6 +7,11 @@ using Newtonsoft.Json;
 
 namespace Define.Api
 {
+    public class PathData
+    {
+        public List<List<double>> Paths { get; set; }
+    }
+
     public class FixedEndPointsModule : NancyModule
     {
         public FixedEndPointsModule(Nancy.Routing.IRouteCacheProvider routeCacheProvider)
@@ -23,8 +28,8 @@ namespace Define.Api
 
         static Response OnMeasureInput(NancyContext ctx, string type)
         {
-            var paths = JsonConvert.DeserializeObject(ctx.Request.Body.AsString());
-            Console.WriteLine(paths);
+            var paths = JsonConvert.DeserializeObject<PathData>(ctx.Request.Body.AsString());
+            Console.WriteLine(paths.Paths);
 
             var measurement = 0.55;
 
