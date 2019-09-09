@@ -23,6 +23,9 @@ namespace Define.Api
 
         static Response OnMeasureInput(NancyContext ctx, string type)
         {
+            var paths = JsonConvert.DeserializeObject(ctx.Request.Body.AsString());
+            Console.WriteLine(paths);
+
             var measurement = 0.55;
 
             return JsonConvert.SerializeObject(measurement);
