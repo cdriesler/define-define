@@ -103,6 +103,7 @@ namespace Define.Api
             return lines;
         }
 
+        // Translator methods
         public static double OnTutorial(List<Polyline> crvs)
         {
             return 0.45;

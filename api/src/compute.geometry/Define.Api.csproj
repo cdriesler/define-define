@@ -126,7 +126,9 @@
     <Compile Include="Endpoints\GetInput.cs" />
     <Compile Include="Endpoints\GetDrawing.cs" />
     <Compile Include="Logging.cs" />
+    <Compile Include="Models\DrawingManifest.cs" />
     <Compile Include="Models\DrawingMaster.cs" />
+    <Compile Include="Models\InputManifest.cs" />
     <Compile Include="Predicates\Test.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
