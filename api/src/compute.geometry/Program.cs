@@ -125,21 +125,6 @@ namespace Define.Api
             nancyConventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("docs"));
         }
 
-        protected override byte[] FavIcon
-        {
-            get { return _favicon ?? (_favicon = LoadFavIcon()); }
-        }
-
-        private byte[] LoadFavIcon()
-        {
-            using (var resourceStream = GetType().Assembly.GetManifestResourceStream("compute.geometry.favicon.ico"))
-            {
-                var memoryStream = new System.IO.MemoryStream();
-                resourceStream.CopyTo(memoryStream);
-                return memoryStream.GetBuffer();
-            }
-        }
-
         private static dynamic LogError(NancyContext ctx, Exception ex)
         {
             string id = ctx.Request.Headers["X-Compute-Id"].FirstOrDefault();

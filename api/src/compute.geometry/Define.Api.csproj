@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{01757ED0-58C4-47DA-926A-70ACD31B93E1}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>compute.geometry</RootNamespace>
-    <AssemblyName>compute.geometry</AssemblyName>
+    <RootNamespace>Define.Api</RootNamespace>
+    <AssemblyName>Define.Api</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -122,7 +122,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Endpoints.cs" />
+    <Compile Include="Endpoints\Defaults.cs" />
+    <Compile Include="Endpoints\GetInput.cs" />
+    <Compile Include="Endpoints\GetDrawing.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Models\DrawingMaster.cs" />
     <Compile Include="Predicates\Test.cs" />
@@ -133,9 +135,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.CloudWatchLogs.3.3.4.10\analyzers\dotnet\cs\AWSSDK.CloudWatchLogs.CodeAnalysis.dll" />

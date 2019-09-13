@@ -1,44 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Reflection;
+using System.Threading.Tasks;
 using Nancy;
-using Nancy.Extensions;
-using Newtonsoft.Json;
 
 namespace Define.Api
 {
-    public class PathData
+    public class DefaultEndpoints : NancyModule
     {
-        public List<List<double>> Paths { get; set; }
-    }
-
-    public class FixedEndPointsModule : NancyModule
-    {
-        public FixedEndPointsModule(Nancy.Routing.IRouteCacheProvider routeCacheProvider)
+        public DefaultEndpoints(Nancy.Routing.IRouteCacheProvider routeCacheProvider)
         {
             Get[""] = _ => HomePage(Context);
             Get["/healthcheck"] = _ => "healthy";
             Get["version"] = _ => GetVersion(Context);
-            Get["servertime"] = _ => ServerTime(Context);
-            Get["sdk/csharp"] = _ => CSharpSdk(Context);
             Post["hammertime"] = _ => HammerTime(Context);
-            Post["/u/separationdistance"] = _ => OnUpdateSeparationDistance(Context);
-            Post["/in/{type}"] = param => OnMeasureInput(Context, param.type);
-        }
-
-        static Response OnMeasureInput(NancyContext ctx, string type)
-        {
-            var paths = JsonConvert.DeserializeObject<PathData>(ctx.Request.Body.AsString());
-            Console.WriteLine(paths.Paths);
-
-            var measurement = 0.55;
-
-            return JsonConvert.SerializeObject(measurement);
-        }
-
-        static Response OnUpdateSeparationDistance(NancyContext ctx)
-        {
-            return null;
         }
 
         static Response HomePage(NancyContext ctx)
@@ -63,29 +40,6 @@ namespace Define.Api
             var response = (Nancy.Response)Newtonsoft.Json.JsonConvert.SerializeObject(DateTime.UtcNow);
             response.ContentType = "application/json";
             return response;
-        }
-
-        static Response CSharpSdk(NancyContext ctx)
-        {
-            string content = "";
-            using (var resourceStream = typeof(FixedEndPointsModule).Assembly.GetManifestResourceStream("compute.geometry.RhinoCompute.cs"))
-            {
-                var stream = new System.IO.StreamReader(resourceStream);
-                content = stream.ReadToEnd();
-                stream.Close();
-            }
-
-            var response = new Response();
-
-            response.Headers.Add("Content-Disposition", "attachment; filename=RhinoCompute.cs");
-            response.ContentType = "text/plain";
-            response.Contents = stream => {
-                using (var writer = new System.IO.StreamWriter(stream))
-                {
-                    writer.Write(content);
-                }
-            };
-            return response.AsAttachment("RhinoCompute.cs", "text/plain" );
         }
 
         /// <summary>
@@ -129,4 +83,3 @@ namespace Define.Api
         }
     }
 }
-
