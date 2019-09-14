@@ -151,9 +151,45 @@ app.post('/in/:id', (req, res) => {
 
 // Get specific drawing from history
 app.get('/d/:id', (req, res) => {
-    db.collection("drawing_history").doc(req.params.id).get()
-    .then(doc => {
-        res.status(200).json(doc);
+    let layernames: string[] = [];
+    let layerlengths: number[] = [];
+    db.collection("drawing_history").doc(req.params.id).listCollections()
+    .then(layers => {
+        let layercontents: Promise<FirebaseFirestore.DocumentReference[]>[] = [];
+        layers.forEach(x => {
+            layernames.push(x.id);
+            layercontents.push(x.listDocuments());
+        })
+
+        return Promise.all(layercontents);
+    })
+    .then(geo => {
+        let geoinfo: Promise<FirebaseFirestore.DocumentSnapshot>[] = [];
+        geo.forEach(x => {
+            layerlengths.push(x.length);
+            x.forEach(y => {
+                geoinfo.push(y.get());
+            })
+        });
+
+        return Promise.all(geoinfo);
+    })
+    .then(data => {
+        let count = 0;
+
+        let drawing: any = {};
+
+        for(let i = 0; i < layernames.length; i++) {
+            let cache: number[][] = [];
+
+            for(let j = count; j < count + layerlengths[i]; j++) {
+                cache.push(data[j].get("path"));
+            }
+
+            drawing[layernames[i]] = cache;
+        }
+
+        res.status(200).json(drawing);
     })
     .catch(err => {
         res.status(400).json(err);
