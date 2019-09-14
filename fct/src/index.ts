@@ -54,8 +54,9 @@ app.get('/handshake', (req, res) => {
 // Store input data and returned packaged input manifest
 app.post('/in/:id', (req, res) => {
     //db.collection("input_cache").doc(req.params.id)
-    var val: number;
-    var id: string;
+    let val: number;
+    let id: string;
+    let inputmanifest: any = {};
     axios.default.post(`${process.env.API_URL}/in/${req.params.id}`, {paths: req.body["paths"]})
     .then(r => {
         // Get measurement from rhino api
@@ -68,14 +69,14 @@ app.post('/in/:id', (req, res) => {
         let cache: number[];
         let keep: number[] = [];
 
-        if (doc == undefined) {
+        if (doc === undefined) {
             cache = [];
         }
         else {
             cache = doc.get("cache");
         }
 
-        if (cache == undefined) {
+        if (cache === undefined) {
             cache = [];
         }
 
@@ -94,7 +95,7 @@ app.post('/in/:id', (req, res) => {
             total = total + x;
         })
 
-        let newdoc = {
+        const newdoc = {
             current: total / cache.length,
             cache: keep,
         }
@@ -106,7 +107,7 @@ app.post('/in/:id', (req, res) => {
     })
     .then(docs => {
         // Get all values in cache
-        let inputs: Promise<FirebaseFirestore.DocumentSnapshot>[] = [];
+        const inputs: Promise<FirebaseFirestore.DocumentSnapshot>[] = [];
         docs.forEach(doc => {
             inputs.push(doc.get());
         });
@@ -115,14 +116,14 @@ app.post('/in/:id', (req, res) => {
     })
     .then(inputs => {
         // Parse current values from cache
-        let manifest:any = {};
+        const manifest:any = {};
 
         inputs.forEach(x => {
             manifest[x.id] = x.get("current");
         });
 
         id = db.collection("input_history").doc().id;
-
+        inputmanifest = manifest;
         return db.collection("input_history").doc(id).set(manifest);
     })
     .then(doc => {
@@ -130,13 +131,61 @@ app.post('/in/:id', (req, res) => {
         return db.collection("input_history").doc(id).get();
     })
     .then(end => {
-        res.status(200).json(end.data());
+        res.status(200).json({inputs: inputmanifest, inputid: id});
     })
     .catch(err => {
         res.status(400).json(err);
     });
-})
+});
 
+// Generate drawing and add to cache
 app.post('/d', (req, res) => {
+    let dwg:any = {};
+    let id = "";
+
+    axios.default.post(`${process.env.API_URL}/d`, JSON.stringify(req.body.inputs))
+    .then(r => {
+        dwg = r.data;
+
+        let docid = db.collection("drawing_cache").doc().id;
+        id = docid;
+
+        const dwgres:any = {}
+
+        dwgres["uid"] = req.body.uid;
+
+        const dwgdata:any = dwg;
+
+        console.log(dwg)
     
-})
+        Object.keys(dwgdata).forEach(x => {
+            dwgres[x] = dwgdata[x];
+        })
+
+        console.log(dwgres);
+
+        return db.collection("drawing_history").doc(docid).set({uid: req.body.uid, input: req.body.inputid});     
+    })
+    .then(doc => {  
+        let promises:Promise<FirebaseFirestore.WriteResult>[] = [];
+  
+        Object.keys(dwg).forEach((x:any) => {
+            const paths:any[] = dwg[x];
+            paths.forEach(y => {
+                promises.push(db.collection("drawing_history").doc(id).collection(x).doc().set({path: y}));
+            });
+        });
+
+        return Promise.all(promises);
+    })
+    .then(all => {
+        return db.collection("drawing_cache").doc().set({drawing_id: id, user_id: req.body.uid, input_id: req.body.inputid});
+    })
+    .then(end => {
+        res.status(200).json(dwg);
+    })
+    .catch(err => {
+        console.log(err.message);
+        res.status(400).json(err);
+    })
+});

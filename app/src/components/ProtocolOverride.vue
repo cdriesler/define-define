@@ -208,9 +208,17 @@ export default Vue.extend({
         },
         onDeploy(): void {
             let destination = `${this.uri}/in/${this.eid}`
+            const drawingEndpoint = `${this.uri}/d`;
             this.$http.post(destination, 
             {paths: (<Svgar.Drawing>this.drawing).Layers[0].Geometry.map(x => x.Coordinates.map(y => +y.toFixed(4)))})
-            .then(res => console.log(res))
+            .then(res => {
+                console.log(res);
+
+                return this.$http.post(drawingEndpoint, {uid: this.$store.state.uid, inputs: res.data.inputs, inputid: res.data.inputid});
+            })
+            .then(dwg => {
+                console.log(dwg);
+            })
             .catch(error => {
                 console.log(destination);
                 console.log(error);
