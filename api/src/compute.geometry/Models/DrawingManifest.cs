@@ -21,10 +21,10 @@ namespace Define.Api
             //Adjacent Manifest
 
             //Points
-            Point3d BottomLeft = new Point3d(input.Adjacent *0.5, 0,0);
-            Point3d TopLeft = new Point3d((input.Adjacent * 0.5) + 0.3, 1,0);
-            Point3d BottomRight = new Point3d(input.Adjacent *-0.5, 0,0);
-            Point3d TopRight = new Point3d((input.Adjacent * 0.5) - 0.3, 1,0);
+            Point3d BottomLeft = new Point3d(input.Adjacent*0.3 +0.3 , 0,0);
+            Point3d TopLeft = new Point3d(input.Adjacent*0.3, 1,0);
+            Point3d BottomRight = new Point3d(input.Adjacent * 0.3 -0.3, 0,0);
+            Point3d TopRight = new Point3d(input.Adjacent * 0.3 - 0.3, 1,0);
 
             //Final Outputs Properties
             Polyline LeftEdge = null;
