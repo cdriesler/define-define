@@ -20,7 +20,7 @@ namespace Define.Api
         public static Dictionary<string, Func<List<Polyline>, double>> Translations { get; private set; } = new Dictionary<string, Func<List<Polyline>, double>>()
         {
             { "tutorial", OnTutorial },
-            { "adjacent", OnAdjacent }
+            { "adjacent", OnAdjacent },
         };
 
         public GetInput()
@@ -59,8 +59,12 @@ namespace Define.Api
 
                 if (measurement < 0)
                 {
-                    var r = new Random();
-                    measurement = r.NextDouble();
+                    measurement = 0;
+                }
+
+                if (measurement > 1)
+                {
+                    measurement = 1;
                 }
 
                 var result = (Response)JsonConvert.SerializeObject(measurement);
@@ -106,17 +110,24 @@ namespace Define.Api
         // Translator methods
         public static double OnTutorial(List<Polyline> crvs)
         {
-            return 0.45;
+            var r = new Random();
+            return r.NextDouble();
         }
 
         public static double OnAdjacent(List<Polyline> crvs)
         {
+            var max = Math.Sqrt(2);
+
             if (crvs.Count < 2)
             {
-                return -1;
+                var r = new Random();
+                return Math.Round(r.NextDouble());
             }
 
-            return crvs[0].PointAt(0).DistanceTo(crvs[1].PointAt(1));
+            var distanceA = crvs[0].ToNurbsCurve().PointAtStart.DistanceTo(crvs[1].ToNurbsCurve().PointAtStart) / max;
+            var distanceB = crvs[0].ToNurbsCurve().PointAtEnd.DistanceTo(crvs[1].ToNurbsCurve().PointAtEnd) / max;
+
+            return (distanceA + distanceB) / 2;
         }
     }
 }
