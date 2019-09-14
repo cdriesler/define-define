@@ -3,7 +3,14 @@
         <div ref="svgar" class="artboard" v-html="svg">
         </div>
         <div class="queue">
-            QUEUE
+            <div class="queue__header">
+                https://define-define.web.app
+            </div>
+            <queue-card
+            v-for="(entry, index) in cache"
+            :key="index"
+            :uid="entry.uid"
+            :iid="entry.iid"></queue-card>
         </div>
     </div>
 </template>
@@ -45,6 +52,21 @@
     margin-top: 15px;
 }
 
+.queue__header {
+    width: calc(100% - 15px);
+    height: 50px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+    line-height: 46px;
+    vertical-align: middle;
+
+    margin-bottom: 15px;
+
+    border: 2px solid black;
+}
+
 @media screen and (orientation: portrait) {
     .artboard {
         width: calc(100vw - 30px);
@@ -71,18 +93,28 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import QueueCard from '../components/QueueCard.vue';
 import DrawingManifest from '../models/DrawingManifest';
 import { Drawing, Layer, State, GeometryElement, StyleBuilder } from 'svgar';
 
+interface Snapshot {
+    uid: string,
+    iid: string,
+    did: string,
+}
+
 export default Vue.extend({
     name: "viewer",
+    components: {
+        QueueCard,
+    },
     data() {
         return {
             uri: "",
             drawing: {} as DrawingManifest,
             w: 0,
             timer: '',
-            cache: [],
+            cache: [] as Snapshot[],
             cacheEndpoint: ''
         }
     },
@@ -132,11 +164,18 @@ export default Vue.extend({
             this.$http.get(this.cacheEndpoint)
             .then((x:any) => {
                 x.data.forEach((y:any) => {
-                    if (!this.cache.includes(y)) {
-                        this.cache.push(y);
-                        console.log(y);
+                    let snap: Snapshot = {
+                        uid: y.uid,
+                        iid: y.input_id,
+                        did: y.drawing_id
+                    }
+                    if (!this.cache.map(x => x.did).includes(snap.did)) {
+                        this.cache.push(snap);
                     }
                 })
+            })
+            .catch(err => {
+                console.log(err);
             })
         }
     }

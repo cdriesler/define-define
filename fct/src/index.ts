@@ -55,7 +55,7 @@ app.get('/handshake', (req, res) => {
 app.get('/in/:id', (req, res) => {
     db.collection("input_history").doc(req.params.id).get()
     .then(doc => {
-        res.status(200).json(doc);
+        res.status(200).json(doc.data());
     })
     .catch(err => {
         res.status(400).json(err);
