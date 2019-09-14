@@ -3,7 +3,7 @@
         <div ref="svgar" class="artboard" v-html="svg">
         </div>
         <div class="queue">
-            
+            QUEUE
         </div>
     </div>
 </template>
@@ -17,6 +17,8 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
 
     width: 100vw;
     height: 100vh;
@@ -39,14 +41,19 @@
 
 .queue {
     flex-grow: 1;
-    
+
+    margin-top: 15px;
 }
 
 @media screen and (orientation: portrait) {
     .artboard {
         width: calc(100vw - 30px);
         height: calc(100vw - 30px);
-        margin-bottom: 15px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .queue {
         margin-left: 15px;
         margin-right: 15px;
     }
