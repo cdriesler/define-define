@@ -51,6 +51,17 @@ app.get('/handshake', (req, res) => {
     });
 })
 
+// Get specific input from history
+app.get('/in/:id', (req, res) => {
+    db.collection("input_history").doc(req.params.id).get()
+    .then(doc => {
+        res.status(200).json(doc);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    });
+})
+
 // Store input data and returned packaged input manifest
 app.post('/in/:id', (req, res) => {
     //db.collection("input_cache").doc(req.params.id)
@@ -137,6 +148,17 @@ app.post('/in/:id', (req, res) => {
         res.status(400).json(err);
     });
 });
+
+// Get specific drawing from history
+app.get('/d/:id', (req, res) => {
+    db.collection("drawing_history").doc(req.params.id).get()
+    .then(doc => {
+        res.status(200).json(doc);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    })
+})
 
 // Generate drawing and add to cache
 app.post('/d', (req, res) => {
