@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Protocol from './views/Protocol.vue';
+import Viewer from './views/Viewer.vue';
 
 Vue.use(Router);
 
@@ -12,6 +13,11 @@ export default new Router({
       path: '/',
       name: 'protocol',
       component: Protocol,
+    },
+    {
+      path: '/define',
+      name: 'viewer',
+      component: Viewer,
     },
     {
       path: '**',
