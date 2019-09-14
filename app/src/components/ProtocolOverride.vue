@@ -128,6 +128,13 @@
 import Vue from 'vue';
 import * as Svgar from 'svgar';
 
+enum Status {
+    AwaitInput, 
+    AwaitDrawing,
+    ValidDrawing,
+    InvalidDrawing
+}
+
 export default Vue.extend({
     name: "p-override",
     props: ["label", "eid", "w", "instructions"],
