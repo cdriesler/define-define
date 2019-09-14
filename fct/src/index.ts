@@ -196,6 +196,44 @@ app.get('/d/:id', (req, res) => {
     })
 })
 
+interface DrawingCacheMap {
+    uid: string;
+    input_id: string;
+    drawing_id: string;
+}
+
+// Get current drawing cache 
+app.get('/d', (req, res) => {
+    db.collection("drawing_cache").listDocuments()
+    .then(docs => {
+        let promises:Promise<FirebaseFirestore.DocumentSnapshot>[] = []
+
+        docs.forEach(x => {
+            promises.push(x.get());
+        });
+
+        return Promise.all(promises);
+    })
+    .then(c => {
+        let latest: DrawingCacheMap[] = [];
+        
+        c.forEach(x => {
+            let update: DrawingCacheMap = {
+                uid: x.get("user_id"),
+                input_id: x.get("input_id"),
+                drawing_id: x.get("drawing_id"),
+            }
+
+            latest.push(update);
+        })
+
+        res.status(200).json(latest);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    })
+})
+
 // Generate drawing and add to cache
 app.post('/d', (req, res) => {
     let dwg:any = {};

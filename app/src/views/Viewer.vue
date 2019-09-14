@@ -81,6 +81,9 @@ export default Vue.extend({
             uri: "",
             drawing: {} as DrawingManifest,
             w: 0,
+            timer: '',
+            cache: [],
+            cacheEndpoint: ''
         }
     },
     created() {
@@ -89,6 +92,8 @@ export default Vue.extend({
         this.$http.get(destination).then(dwg => {
             this.drawing = new DrawingManifest(dwg.data);
         });
+        this.startInterval();
+        this.cacheEndpoint = `${this.uri}/d`
     },
     mounted() {
         let canvas:any = this.$refs.svgar;
@@ -117,6 +122,22 @@ export default Vue.extend({
             dwg.AddState(style);
 
             return dwg.Compile(undefined, this.w, this.w);
+        }
+    },
+    methods: {
+        startInterval(): void {
+            setInterval(() => this.updateCache(), 5000);
+        },
+        updateCache(): void {
+            this.$http.get(this.cacheEndpoint)
+            .then((x:any) => {
+                x.data.forEach((y:any) => {
+                    if (!this.cache.includes(y)) {
+                        this.cache.push(y);
+                        console.log(y);
+                    }
+                })
+            })
         }
     }
 })
