@@ -10,10 +10,44 @@ namespace Define.Api
     public class DrawingManifest
     {
         // Drawing information
+        public List<List<double>> Debug { get; set; } = new List<List<double>>();
 
         public DrawingManifest(InputManifest input)
         {
             // Make a drawing with the inputs
+     
+
+
+            //Adjacent Manifest
+
+            //Points
+            Point3d BottomLeft = new Point3d(input.Adjacent / 0.3, 0,0);
+            Point3d TopLeft = new Point3d((input.Adjacent / 0.3) + 0.3, 1,0);
+            Point3d BottomRight = new Point3d(input.Adjacent / 0.6, 0,0);
+            Point3d TopRight = new Point3d((input.Adjacent / 0.3) - 0.3, 1,0);
+
+            //Final Outputs Properties
+            Polyline LeftEdge = null;
+            Polyline RightEdge = null;
+
+            //Edges Creation
+            var leftEdgeList = new List<Point3d>() { BottomLeft, TopLeft };
+            var RightEdgeList = new List<Point3d>() { BottomRight, TopRight };
+
+            LeftEdge = new Polyline(leftEdgeList);
+            RightEdge = new Polyline(RightEdgeList);
+
+            //converting final output to svgar
+            Debug.Add(RhinoPolylineToSvgar(LeftEdge));
+            Debug.Add(RhinoPolylineToSvgar(RightEdge));
+
+
+
+         
+
+
+            
+            
         }
 
         // Convert linear rhino geometry to svgar format
