@@ -79,7 +79,7 @@ export default Vue.extend({
     data() {
         return {
             uri: "",
-            drawing: undefined,
+            drawing: {} as DrawingManifest,
             w: 0,
         }
     },
@@ -91,15 +91,17 @@ export default Vue.extend({
         });
     },
     mounted() {
-        let canvas:Element = this.$refs.svgar;
+        let canvas:any = this.$refs.svgar;
         this.w = canvas.clientWidth;
     },
     computed: {
         svg(): string {
-            if (this.drawing == undefined) {
+            let data:DrawingManifest = this.drawing;
+
+            if (data.Debug == undefined) {
                 return "";
             }
-            let data:DrawingManifest = this.drawing;
+            
             let dwg = new Drawing("main");
 
             let layer = new Layer("debug").AddTag("debug");

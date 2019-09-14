@@ -15,8 +15,8 @@ export default new Router({
       component: Protocol,
     },
     {
-      path: '/define',
-      name: 'viewer',
+      path: '/output',
+      name: 'output',
       component: Viewer,
     },
     {
