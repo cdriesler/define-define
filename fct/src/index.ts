@@ -136,3 +136,7 @@ app.post('/in/:id', (req, res) => {
         res.status(400).json(err);
     });
 })
+
+app.post('/d', (req, res) => {
+    
+})

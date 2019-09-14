@@ -63,7 +63,7 @@ export const ProtocolManifest:ProtocolStatement[] = [
         overrides: [
             {
                 word: "porous",
-                eid: "relativearea",
+                eid: "porosity",
                 instructions: "draw a small shape inside a big shape",
             },
             {
