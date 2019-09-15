@@ -197,7 +197,7 @@ export default Vue.extend({
             activeSnapshot: {} as Snapshot,
             activeDrawing: {} as DrawingManifest,
             activeSvg: '',
-            storedDrawings: [],
+            storedDrawings: [] as string[],
         }
     },
     created() {
@@ -271,7 +271,7 @@ export default Vue.extend({
                     console.log(err.message);
                 })
             }
-            else if (this.activeDrawing == {} || Object.keys(this.activeDrawing).length == 0) {
+            else if (Object.keys(this.activeDrawing).length == 0) {
                 this.activeSnapshot = this.cache[0];
 
                 let dest = `${this.uri}/d/${this.activeSnapshot.did}`
