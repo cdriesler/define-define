@@ -67,7 +67,7 @@ namespace Define.Api
                 pts.Add(midPt.X);
                 pts.Add(midPt.Y);
                 pts.Add(segEnd.X);
-                pts.Add(segStart.Y);
+                pts.Add(segEnd.Y);
             }
 
             return pts;
