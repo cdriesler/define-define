@@ -197,6 +197,7 @@ app.get('/d/:id', (req, res) => {
 })
 
 interface DrawingCacheMap {
+    fsid: string;
     uid: string;
     input_id: string;
     drawing_id: string;
@@ -219,6 +220,7 @@ app.get('/d', (req, res) => {
         
         c.forEach(x => {
             let update: DrawingCacheMap = {
+                fsid: x.id,
                 uid: x.get("user_id"),
                 input_id: x.get("input_id"),
                 drawing_id: x.get("drawing_id"),
@@ -285,3 +287,14 @@ app.post('/d', (req, res) => {
         res.status(400).json(err);
     })
 });
+
+// Remove drawing from cache
+app.delete('/d/:id', (req, res) => {
+    db.collection("drawing_cache").doc(req.params.id).delete()
+    .then(x => {
+        res.status(200).json(x.writeTime);
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    })
+})

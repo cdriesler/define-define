@@ -6,6 +6,8 @@
             <div class="queue__header">
                 https://define-define.web.app
             </div>
+            <div class="queue_timer">
+            </div>
             <queue-card
             v-for="(entry, index) in cache"
             :key="index"
@@ -67,6 +69,26 @@
     border: 2px solid black;
 }
 
+.queue_timer {
+    margin-bottom: 15px;
+    border-bottom: 2px solid black;
+    height: 2px;
+
+    animation-name: timer;
+    animation-duration: 20s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes timer {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
+}
+
 @media screen and (orientation: portrait) {
     .artboard {
         width: calc(100vw - 30px);
@@ -102,6 +124,7 @@ import DrawingManifest from '../models/DrawingManifest';
 import { Drawing, Layer, State, GeometryElement, StyleBuilder } from 'svgar';
 
 interface Snapshot {
+    fsid: string,
     uid: string,
     iid: string,
     did: string,
@@ -119,17 +142,19 @@ export default Vue.extend({
             w: 0,
             timer: '',
             cache: [] as Snapshot[],
-            cacheEndpoint: ''
+            cacheEndpoint: '',
+            activeSnapshot: {} as Snapshot,
+            activeDrawing: {} as DrawingManifest,
+            storedDrawings: [],
         }
     },
     created() {
         this.uri = process.env.VUE_APP_FCT_URL;
-        let destination: string = `${this.uri}/d/fiHJx16YQQ0Plx5sItha`;
-        this.$http.get(destination).then(dwg => {
-            this.drawing = new DrawingManifest(dwg.data);
-        });
-        this.startInterval();
+        
         this.cacheEndpoint = `${this.uri}/d`
+        this.updateCache();
+        this.startInterval();
+        this.startConsume();
     },
     mounted() {
         let canvas:any = this.$refs.svgar;
@@ -137,7 +162,7 @@ export default Vue.extend({
     },
     computed: {
         svg(): string {
-            let data:DrawingManifest = this.drawing;
+            let data:DrawingManifest = this.activeDrawing;
 
             if (data.Debug == undefined) {
                 return "";
@@ -162,13 +187,56 @@ export default Vue.extend({
     },
     methods: {
         startInterval(): void {
-            setInterval(() => this.updateCache(), 5000);
+            setInterval(() => this.updateCache(), 2500);
+        },
+        startConsume(): void {
+            setInterval(() => this.consumeCache(), 20000);
+        },
+        consumeCache(): void {
+            if (this.cache.length > 1) {
+                this.activeSnapshot = this.cache[1];
+
+                let dest = `${this.uri}/d/${this.activeSnapshot.did}`
+
+                this.$http.get(dest)
+                .then(dwg => {
+                    this.activeDrawing = new DrawingManifest(dwg.data);
+
+                    //Delete consumed doc from drawing_cache on firestore.
+                    let del = `${this.uri}/d/${this.cache[0].fsid}`
+                    return this.$http.delete(del)
+                })
+                .then(() => {
+                    // Delete consumed snapshot from local this.cache
+                    this.cache = this.cache.slice(1, this.cache.length);
+                })
+                .catch(err => {
+                    console.log(err.message);
+                })
+            }
+            else if (this.activeDrawing == {} || Object.keys(this.activeDrawing).length == 0) {
+                this.activeSnapshot = this.cache[0];
+
+                let dest = `${this.uri}/d/${this.activeSnapshot.did}`
+
+                this.$http.get(dest)
+                .then(dwg => {
+                    this.activeDrawing = new DrawingManifest(dwg.data);
+                })
+                .catch(err => {
+                    console.log(err.message);
+                })
+            }
+        },
+        updateDrawing(snap: Snapshot): void {
+
         },
         updateCache(): void {
             this.$http.get(this.cacheEndpoint)
             .then((x:any) => {
                 x.data.forEach((y:any) => {
                     let snap: Snapshot = {
+                        fsid: y.fsid,
                         uid: y.uid,
                         iid: y.input_id,
                         did: y.drawing_id
