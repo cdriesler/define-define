@@ -79,6 +79,10 @@
         margin-left: 15px;
         margin-right: 15px;
     }
+
+    .queue__header {
+        width: 100%;
+    }
 }
 
 @media screen and (orientation: landscape) {
@@ -177,7 +181,7 @@ export default Vue.extend({
             .catch(err => {
                 console.log(err);
             })
-        }
+        },
     }
 })
 </script>

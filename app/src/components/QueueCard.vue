@@ -4,8 +4,8 @@
         {{uid}}
     </div>
     <div class="card__values">
-        <div class="card__values__val" v-for="(i, index) in inputs" :key="index">
-            {{i}}
+        <div class="card__values__val" v-for="(i, index) in inputs" :key="index" :style="{ backgroundColor: colorFromVal(i)}">
+            <span>{{i}}</span>
         </div>
     </div>
 </div>
@@ -41,7 +41,6 @@
     width: 50px;
 
     box-sizing: border-box;
-    margin-right: 15px;
 
     font-size: 14px;
     line-height: 46px;
@@ -64,10 +63,16 @@
     width: 50px;
     height: 100%;
 
+    margin-left: 15px;
+
     font-size: 12px;
     line-height: 50px;
     vertical-align: middle;
     text-align: center;
+}
+
+.card__values__val:after {
+
 }
 
 </style>
@@ -87,11 +92,20 @@ export default Vue.extend({
         this.destination = `${process.env.VUE_APP_FCT_URL}/in/${this.iid}`
         this.$http.get(this.destination)
         .then(x => {
-            console.log(x.data);
             Object.keys(x.data).forEach(y => {
                 this.inputs.push(Math.round(+x.data[y] * 100));
             })
         });
+    },
+    methods: {
+        colorFromVal(val: number): string {
+            let scaled = Math.round((val / 100) * 200);
+            let hex = scaled.toString(16)
+
+            let color = "#" + hex + hex + hex;
+
+            return color;
+        }
     }
 })
 </script>
