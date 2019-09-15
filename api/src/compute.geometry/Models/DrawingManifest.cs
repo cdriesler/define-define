@@ -54,10 +54,10 @@ namespace Define.Api
 
             for (int i = 0; i < line.SegmentCount; i++)
             {
-                var pt = line.SegmentAt(i).ToNurbsCurve();
+                var seg = line.SegmentAt(i);
 
-                var segStart = pt.PointAtStart;
-                var segEnd = pt.PointAtEnd;
+                var segStart = seg.From;
+                var segEnd = seg.To;
                 var midPt = (segStart + segEnd) / 2;
 
                 pts.Add(segStart.X);
