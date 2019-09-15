@@ -21,6 +21,11 @@ namespace Define.Api
         {
             { "tutorial", OnTutorial },
             { "adjacent", OnAdjacent },
+            { "openings", OnOpenings },
+            { "disjoint", OnDisjoint },
+            { "largethreshold", OnThreshold },
+            { "porosity", OnPorosity },
+            { "parallel", OnParallel }
         };
 
         public GetInput()
@@ -129,5 +134,31 @@ namespace Define.Api
 
             return (distanceA + distanceB) / 2;
         }
+
+        public static double OnOpenings(List<Polyline> crvs)
+        {
+            return 0.25;
+        }
+
+        public static double OnDisjoint(List<Polyline> crvs)
+        {
+            return 0.35;
+        }
+
+        public static double OnThreshold(List<Polyline> crvs)
+        {
+            return 0.45;
+        }
+
+        public static double OnPorosity(List<Polyline> crvs)
+        {
+            return 0.55;
+        }
+
+        public static double OnParallel(List<Polyline> crvs)
+        {
+            return 0.75;
+        }
+
     }
 }
