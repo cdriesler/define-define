@@ -10,9 +10,10 @@
             </div>
             <queue-card
             v-for="(entry, index) in cache"
-            :key="index"
+            :key="entry.fsid + index"
             :uid="entry.uid"
-            :iid="entry.iid"></queue-card>
+            :iid="entry.iid"
+            :isActive="index == 0"></queue-card>
         </div>
     </div>
 </template>
@@ -115,6 +116,7 @@
         margin-right: 15px;
     }
 }
+
 </style>
 
 <script lang="ts">
@@ -195,6 +197,7 @@ export default Vue.extend({
         consumeCache(): void {
             if (this.cache.length > 1) {
                 this.activeSnapshot = this.cache[1];
+                this.cache = this.cache.slice(1, this.cache.length);
 
                 let dest = `${this.uri}/d/${this.activeSnapshot.did}`
 
@@ -208,7 +211,7 @@ export default Vue.extend({
                 })
                 .then(() => {
                     // Delete consumed snapshot from local this.cache
-                    this.cache = this.cache.slice(1, this.cache.length);
+                    
                 })
                 .catch(err => {
                     console.log(err.message);

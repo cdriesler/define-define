@@ -3,10 +3,13 @@
     <div class="card__id">
         {{uid}}
     </div>
-    <div class="card__values">
-        <div class="card__values__val" v-for="(i, index) in inputs" :key="index" :style="{ backgroundColor: colorFromVal(i)}">
-            <span>{{i}}</span>
-        </div>
+    <div 
+    class="card__values__val" 
+    v-for="(i, index) in inputs" 
+    :key="iid + index" 
+    :style="{ backgroundColor: colorFromVal(i)}"
+    :class="{'card__values__val--active' : isActive}">
+        <span v-show="isActive">{{i}}</span>
     </div>
 </div>
 </template>
@@ -36,6 +39,12 @@
     }
 }
 
+@media screen and (orientation: landscape) {
+    #qc {
+        width: calc(100% - 15px);
+    }
+}
+
 .card__id {
     height: 100%;
     width: 50px;
@@ -60,7 +69,7 @@
 }
 
 .card__values__val {
-    width: 50px;
+    flex-grow: 1;
     height: 100%;
 
     margin-left: 15px;
@@ -71,8 +80,11 @@
     text-align: center;
 }
 
-.card__values__val:after {
+.card__values__val--active {
+    outline: 2px solid black;
+    outline-offset: -2px;
 
+    background: none !important;
 }
 
 </style>
@@ -81,7 +93,7 @@
 import Vue from 'vue'
 export default Vue.extend({
     name: "queue-card",
-    props: ["uid", "iid"],
+    props: ["uid", "iid", "isActive"],
     data() {
         return {
             inputs: [] as number[],
@@ -92,19 +104,24 @@ export default Vue.extend({
         this.destination = `${process.env.VUE_APP_FCT_URL}/in/${this.iid}`
         this.$http.get(this.destination)
         .then(x => {
-            Object.keys(x.data).forEach(y => {
+            Object.keys(x.data).sort().forEach(y => {
                 this.inputs.push(Math.round(+x.data[y] * 100));
             })
         });
     },
     methods: {
         colorFromVal(val: number): string {
-            let scaled = Math.round((val / 100) * 200);
-            let hex = scaled.toString(16)
+            if (this.isActive) {
+                return "#FFFFFF"
+            }
+            else {
+                let scaled = Math.round((val / 100) * 200);
+                let hex = scaled.toString(16)
 
-            let color = "#" + hex + hex + hex;
+                let color = "#" + hex + hex + hex;
 
-            return color;
+                return color;
+            }
         }
     }
 })
