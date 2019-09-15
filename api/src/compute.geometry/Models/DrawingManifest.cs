@@ -12,30 +12,27 @@ namespace Define.Api
         // Drawing information
         public List<List<double>> Debug { get; set; } = new List<List<double>>();
 
+        /// <summary>
+        /// Given an input manifest of named values between zero and one, generate a drawing.
+        /// </summary>
+        /// <param name="input"></param>
         public DrawingManifest(InputManifest input)
         {
-            // Make a drawing with the inputs
-     
-
-
-            //Adjacent Manifest
+            //Parse adjacent
 
             //Points
-            Point3d BottomLeft = new Point3d(input.Adjacent*0.3 +0.3 , 0,0);
-            Point3d TopLeft = new Point3d(input.Adjacent*0.3, 1,0);
-            Point3d BottomRight = new Point3d(input.Adjacent * 0.3 -0.3, 0,0);
-            Point3d TopRight = new Point3d(input.Adjacent * 0.3 - 0.3, 1,0);
+            Point3d BottomLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 0, 0);
+            Point3d TopLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 1, 0);
+            Point3d BottomRight = new Point3d(0.5 + (0.4 * input.Adjacent), 0,0);
+            Point3d TopRight = new Point3d(0.5 + (0.4 * input.Adjacent), 1, 0);
 
-            //Final Outputs Properties
-            Polyline LeftEdge = null;
-            Polyline RightEdge = null;
-
-            //Edges Creation
+            //Point collections
             var leftEdgeList = new List<Point3d>() { BottomLeft, TopLeft };
             var RightEdgeList = new List<Point3d>() { BottomRight, TopRight };
 
-            LeftEdge = new Polyline(leftEdgeList);
-            RightEdge = new Polyline(RightEdgeList);
+            //Generate polylines
+            var LeftEdge = new Polyline(leftEdgeList);
+            var RightEdge = new Polyline(RightEdgeList);
 
             //converting final output to svgar
             Debug.Add(RhinoPolylineToSvgar(LeftEdge));
@@ -61,7 +58,7 @@ namespace Define.Api
 
                 var segStart = pt.PointAtStart;
                 var segEnd = pt.PointAtEnd;
-                var midPt = pt.PointAtNormalizedLength(0.5);
+                var midPt = (segStart + segEnd) / 2;
 
                 pts.Add(segStart.X);
                 pts.Add(segStart.Y);
