@@ -1,6 +1,10 @@
 <template>
     <div id="viewer">
-        <div ref="svgar" class="artboard" v-html="svg">
+        <div ref="svgar" class="artboard">
+            <div class="artboard--current" v-html="svg">
+            </div>
+            <div class="artboard--past" v-for="(kept, i) in storedDrawings" :key="i" :class="{'artboard--previous':i == 0, 'artboard--archived':i >= 1}" v-html="storedDrawings[i]">
+            </div>
         </div>
         <div class="queue">
             <div class="queue__header">
@@ -49,6 +53,52 @@
     margin-top: 15px;
 }
 
+.artboard--current {
+    position: absolute;
+    left: 17px;
+    top: 17px;
+}
+
+.artboard--current svg g path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation-name: dash;
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes dash {
+    from {
+        stroke-dashoffset: 1000;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.artboard--archived {
+    position: absolute;
+    left: 17px;
+    top: 17px;
+
+    opacity: 0.2;
+}
+
+.artboard--previous svg g path {
+    animation-name: fadepath;
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadepath {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: .25;
+    }
+}
+
 .queue {
     flex-grow: 1;
 
@@ -73,7 +123,6 @@
 .queue_timer {
     margin-bottom: 15px;
     border-bottom: 2px solid black;
-    height: 2px;
 
     animation-name: timer;
     animation-duration: 20s;
@@ -147,6 +196,7 @@ export default Vue.extend({
             cacheEndpoint: '',
             activeSnapshot: {} as Snapshot,
             activeDrawing: {} as DrawingManifest,
+            activeSvg: '',
             storedDrawings: [],
         }
     },
@@ -184,7 +234,10 @@ export default Vue.extend({
 
             dwg.AddState(style);
 
-            return dwg.Compile(undefined, this.w, this.w);
+            let latest = dwg.Compile(undefined, this.w, this.w);
+            this.activeSvg = latest;
+
+            return latest;
         }
     },
     methods: {
@@ -203,6 +256,7 @@ export default Vue.extend({
 
                 this.$http.get(dest)
                 .then(dwg => {
+                    this.updateStoredDrawings();
                     this.activeDrawing = new DrawingManifest(dwg.data);
 
                     //Delete consumed doc from drawing_cache on firestore.
@@ -253,6 +307,21 @@ export default Vue.extend({
                 console.log(err);
             })
         },
+        updateStoredDrawings(): void {
+            if (this.storedDrawings.length >= 4) {
+                let keep = this.storedDrawings.slice(1, 4);
+
+                this.storedDrawings = [
+                    this.activeSvg,
+                    keep[0],
+                    keep[1],
+                    keep[2]
+                ]
+            }
+            else {
+                this.storedDrawings.push(this.activeSvg);
+            }
+        }
     }
 })
 </script>
