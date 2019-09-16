@@ -6,6 +6,7 @@
     <div 
     class="card__values__val" 
     v-for="(i, index) in inputs" 
+    v-show="i != 'tutorial'"
     :key="iid + index" 
     :style="{ backgroundColor: colorFromVal(i)}"
     :class="{'card__values__val--active' : isActive}">

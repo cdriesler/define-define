@@ -174,8 +174,8 @@ namespace Define.Api
                     var largeCL = new Line(largeC.From, largeC.To);
                     var largeCR = new Line(largeC.From, largeC.To);
 
-                    var moveR = Transform.Translation(new Vector3d(0.1, 0, 0));
-                    var moveL = Transform.Translation(new Vector3d(-0.1, 0, 0));
+                    var moveR = Transform.Translation(new Vector3d(0.04, 0, 0));
+                    var moveL = Transform.Translation(new Vector3d(-0.04, 0, 0));
 
                     largeCL.Transform(moveL);
                     largeCR.Transform(moveR);
