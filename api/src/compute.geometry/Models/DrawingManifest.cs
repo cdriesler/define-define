@@ -77,15 +77,30 @@ namespace Define.Api
                 var cR = rightEdge.SegmentAt(i);
 
                 var cLextended = new Line(cL.From, cL.To);
+                cLextended.Extend(l, l);
                 var cRextended = new Line(cR.From, cR.To);
+                cRextended.Extend(l, l);
 
-                extensions.Add(new Line(cL.From, cLextended.From));
-                extensions.Add(new Line(cL.To, cLextended.To));
-                extensions.Add(new Line(cR.From, cRextended.From));
-                extensions.Add(new Line(cR.To, cRextended.To));
+                var cLexA = new Line(cL.From, cLextended.From);
+                var cLexB = new Line(cL.To, cLextended.To);
+                var cRexA = new Line(cR.From, cRextended.From);
+                var cRexB = new Line(cR.To, cRextended.To);
+
+                extensions.AddRange(new List<Line>() { cLexA, cLexB, cRexA, cRexB });
             }
 
+            var moved = new List<Line>();
+
             extensions.ForEach(x =>
+            {
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.05);
+
+                x.Transform(tx);
+
+                moved.Add(x);
+            });
+
+            moved.ForEach(x =>
             {
                 Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { ( x.From + x.To ) / 2, x.To })));
                 Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { (x.From + x.To) / 2, x.From })));
