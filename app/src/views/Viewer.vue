@@ -172,7 +172,7 @@
 import Vue from 'vue'
 import QueueCard from '../components/QueueCard.vue';
 import DrawingManifest from '../models/DrawingManifest';
-import { Drawing, Layer, State, GeometryElement, StyleBuilder } from 'svgar';
+import { Drawing, Layer, State, GeometryElement, StyleBuilder, PolylineBuilder } from 'svgar';
 
 interface Snapshot {
     fsid: string,
@@ -222,15 +222,21 @@ export default Vue.extend({
             
             let dwg = new Drawing("main");
 
-            let layer = new Layer("debug").AddTag("debug");
+            // Compose layer geometries
+            let background = new Layer("background").AddTag("background").AddGeometry(new PolylineBuilder([0,0]).LineTo([1,0]).LineTo([1,1]).LineTo([0,1]).LineTo([0,0]).Build());
+            dwg.AddLayer(background);
 
-            data.Debug.forEach(x => {
-                layer.AddGeometry(new GeometryElement(x));
+            let edges = new Layer("edges").AddTag("edges");
+            data.Edges.forEach(x => {
+                edges.AddGeometry(new GeometryElement(x));
             });
+            dwg.AddLayer(edges);
 
-            dwg.AddLayer(layer);
-
-            let style = new State("debug-state").AddStyle(new StyleBuilder("debug-style").Fill("none").Stroke("#000000").StrokeWidth("2px").Build()).Target("debug-style", "debug");
+            // Compose drawing style
+            let style = new State("main-state")
+            .AddStyle(new StyleBuilder("background-style").Fill("#dcdcdc").Stroke("#000000").StrokeWidth("0.1px").Build()).Target("background-style", "background")
+            .AddStyle(new StyleBuilder("edges-style").Fill("none").Stroke("#000000").StrokeWidth("4px").Build()).Target("edges-style", "edges")
+            .SendToBack("background");
 
             dwg.AddState(style);
 
@@ -256,8 +262,10 @@ export default Vue.extend({
 
                 this.$http.get(dest)
                 .then(dwg => {
+                    console.log(dwg.data);
                     this.updateStoredDrawings();
                     this.activeDrawing = new DrawingManifest(dwg.data);
+                    console.log(this.activeDrawing);
 
                     //Delete consumed doc from drawing_cache on firestore.
                     let del = `${this.uri}/d/${this.cache[0].fsid}`

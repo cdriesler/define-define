@@ -53,8 +53,8 @@ namespace Define.Api
                 var ptLeft = new Point3d((0.5 - position - x), y, 0);
                 var ptRight = new Point3d((0.5 + position + x), y, 0);
 
-                ptLeft.Transform(rotateL);
-                ptRight.Transform(rotateR);
+                //ptLeft.Transform(rotateL);
+                //ptRight.Transform(rotateR);
 
                 leftPoints.Add(ptLeft);
                 rightPoints.Add(ptRight);
