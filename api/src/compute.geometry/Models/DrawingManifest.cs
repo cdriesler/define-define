@@ -29,7 +29,7 @@ namespace Define.Api
 
             // Generate interior points from input.Openings
             var pointCount = Convert.ToInt32(Math.Round(input.Openings * 9));
-            var step = 1 / pointCount;
+            double step = 1.0 / pointCount;
             var leftPoints = new List<Point3d>();
             var rightPoints = new List<Point3d>();
 
@@ -39,8 +39,6 @@ namespace Define.Api
             {
                 var y = i * step;
                 var x = r.NextDouble() * (input.Openings * 0.25);
-
-                Console.WriteLine(x);
 
                 leftPoints.Add(new Point3d((0.5 - position - x), y, 0));
                 rightPoints.Add(new Point3d((0.5 + position + x), y, 0));
