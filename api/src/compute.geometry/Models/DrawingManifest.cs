@@ -124,16 +124,16 @@ namespace Define.Api
             for (var i = 0; i < movedLex.Count; i+=2)
             {
                 var crvA = movedLex[i];
-                var targetA = crvA.To.X > crvA.From.X ? rightEdge.SegmentAt(i / 2).From : new Point3d(0, crvA.To.Y, 0);
+                var targetA = crvA.To.X > crvA.From.X ? new Point3d(rightEdge.SegmentAt(i / 2).To.X, crvA.To.Y, 0) : new Point3d(0, crvA.To.Y, 0);
 
                 var crvB = movedLex[i + 1];
-                var targetB = crvB.To.X > crvB.From.X ? rightEdge.SegmentAt(i / 2).To : new Point3d(0, crvB.To.Y, 0);
+                var targetB = crvB.To.X > crvB.From.X ? new Point3d(rightEdge.SegmentAt(i / 2).From.X, crvB.To.Y, 0) : new Point3d(0, crvB.To.Y, 0);
 
                 var crvC = movedRex[i];
-                var targetC = crvC.To.X < crvC.From.X ? leftEdge.SegmentAt(i / 2).From : new Point3d(1, crvC.To.Y, 0);
+                var targetC = crvC.To.X < crvC.From.X ? new Point3d(leftEdge.SegmentAt(i / 2).To.X, crvC.To.Y, 0) : new Point3d(1, crvC.To.Y, 0);
 
                 var crvD = movedRex[i + 1];
-                var targetD = crvD.To.X < crvD.From.X ? leftEdge.SegmentAt(i / 2).To : new Point3d(1, crvD.To.Y, 0);
+                var targetD = crvD.To.X < crvD.From.X ? new Point3d(leftEdge.SegmentAt(i / 2).From.X, crvD.To.Y, 0) : new Point3d(1, crvD.To.Y, 0);
 
                 var ext = new List<Line>()
                 {
@@ -184,6 +184,24 @@ namespace Define.Api
                     largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
                     largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, largeCR.To }));
                 }
+
+                if (rc.Length > threshold)
+                {
+                    var largeC = new Line(rc.From, rc.To);
+                    largeC.ExtendThroughBox(new BoundingBox(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
+                    var largeCL = new Line(largeC.From, largeC.To);
+                    var largeCR = new Line(largeC.From, largeC.To);
+
+                    var moveR = Transform.Translation(new Vector3d(0.04, 0, 0));
+                    var moveL = Transform.Translation(new Vector3d(-0.04, 0, 0));
+
+                    largeCL.Transform(moveL);
+                    largeCR.Transform(moveR);
+
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, largeCL.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, largeCR.To }));
+                }
             }
 
             largeLines.ForEach(x =>
@@ -201,11 +219,19 @@ namespace Define.Api
             var anchorL = new Plane(new Point3d(0.2 * (1 - input.Adjacent), 0.3 * (1 - input.Adjacent), 0), Vector3d.ZAxis);
             var rectL = new Rectangle3d(anchorL, iL, iL);
             var rotL = Transform.Rotation((90 * input.Openings) * (Math.PI / 180), anchorL.Origin);
-            var stretchL = Transform.Scale(anchorL, 1, 1 + input.Porosity, 1);
+            var stretchL = Transform.Scale(anchorL, 1, 1 + (input.Porosity * proportion), 1);
             rectL.Transform(rotL);
             rectL.Transform(stretchL);
 
+            var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
+            var rectR = new Rectangle3d(anchorR, iR, iR);
+            var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
+            var stretchR = Transform.Scale(anchorR, 1, 1 + (input.Porosity * (1 / proportion)), 1);
+            rectR.Transform(rotR);
+            rectR.Transform(stretchR);
+
             Debug.Add(RhinoPolylineToSvgar(rectL.ToPolyline()));
+            Debug.Add(RhinoPolylineToSvgar(rectR.ToPolyline()));
         }
 
         // Convert linear rhino geometry to svgar format
