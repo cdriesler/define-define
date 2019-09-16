@@ -180,9 +180,9 @@ namespace Define.Api
                     largeCL.Transform(moveL);
                     largeCR.Transform(moveR);
 
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, largeCL.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCL.From.X - (0.04 * input.Parallel), largeCL.From.Y, 0), largeCL.To }));
                     largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, largeCR.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCR.From.X + (0.04 * input.Parallel), largeCR.From.Y, 0), largeCR.To }));
                 }
 
                 if (rc.Length > threshold)
@@ -192,15 +192,15 @@ namespace Define.Api
                     var largeCL = new Line(largeC.From, largeC.To);
                     var largeCR = new Line(largeC.From, largeC.To);
 
-                    var moveR = Transform.Translation(new Vector3d(0.04, 0, 0));
-                    var moveL = Transform.Translation(new Vector3d(-0.04, 0, 0));
+                    var moveR = Transform.Translation(new Vector3d(0.02, 0, 0));
+                    var moveL = Transform.Translation(new Vector3d(-0.02, 0, 0));
 
                     largeCL.Transform(moveL);
                     largeCR.Transform(moveR);
 
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, largeCL.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, new Point3d(largeCL.To.X - (0.04 * input.Parallel), largeCL.To.Y, 0) }));
                     largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, largeCR.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, new Point3d(largeCR.To.X + (0.04 * input.Parallel), largeCR.To.Y, 0) }));
                 }
             }
 
@@ -223,12 +223,17 @@ namespace Define.Api
             rectL.Transform(rotL);
             rectL.Transform(stretchL);
 
+            var rectL2 = rectL.ToPolyline().Duplicate();
+            rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * 0.25));
+
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
             var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
             var stretchR = Transform.Scale(anchorR, 1, 1 + (input.Porosity * (1 / proportion)), 1);
             rectR.Transform(rotR);
             rectR.Transform(stretchR);
+
+            
 
             Debug.Add(RhinoPolylineToSvgar(rectL.ToPolyline()));
             Debug.Add(RhinoPolylineToSvgar(rectR.ToPolyline()));
