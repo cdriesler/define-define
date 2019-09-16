@@ -225,8 +225,11 @@ namespace Define.Api
 
             var rectL2 = rectL.ToPolyline().Duplicate();
             rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * 0.25));
+            var rectL3 = rectL.ToPolyline().Duplicate();
+            rectL3.Transform(Transform.Translation(rectL.Plane.YAxis * 0.5));
 
             Debug.Add(RhinoPolylineToSvgar(rectL2));
+            Debug.Add(RhinoPolylineToSvgar(rectL3));
 
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
@@ -235,7 +238,13 @@ namespace Define.Api
             rectR.Transform(rotR);
             rectR.Transform(stretchR);
 
-            
+            var rectR2 = rectR.ToPolyline().Duplicate();
+            rectR2.Transform(Transform.Translation(rectR.Plane.YAxis * 0.25));
+            var rectR3 = rectR.ToPolyline().Duplicate();
+            rectR3.Transform(Transform.Translation(rectR.Plane.YAxis * 0.5));
+
+            Debug.Add(RhinoPolylineToSvgar(rectR2));
+            Debug.Add(RhinoPolylineToSvgar(rectR3));            
 
             Debug.Add(RhinoPolylineToSvgar(rectL.ToPolyline()));
             Debug.Add(RhinoPolylineToSvgar(rectR.ToPolyline()));
