@@ -35,22 +35,21 @@ namespace Define.Api
 
             var r = new Random(Convert.ToInt32(input.Tutorial * 100));
 
+            var rotate = Transform.Rotation((input.Openings * 90) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
+
             for (var i = 1; i < pointCount; i++)
             {
                 var y = i * step;
                 var x = r.NextDouble() * (input.Openings * 0.25);
 
-                leftPoints.Add(new Point3d((0.5 - position - x), y, 0));
-                rightPoints.Add(new Point3d((0.5 + position + x), y, 0));
-            }
+                var ptLeft = new Point3d((0.5 - position - x), y, 0);
+                var ptRight = new Point3d((0.5 + position + x), y, 0);
 
-            // Rotate middle points about the center;
-            var rotate = Transform.Rotation((input.Openings * 90) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
-            
-            for (var i = 0; i < leftPoints.Count; i++)
-            {
-                leftPoints[i].Transform(rotate);
-                rightPoints[i].Transform(rotate);
+                ptLeft.Transform(rotate);
+                ptRight.Transform(rotate);
+
+                leftPoints.Add(ptLeft);
+                rightPoints.Add(ptRight);
             }
 
             var leftEdgePoints = new List<Point3d>() { BottomLeft };
