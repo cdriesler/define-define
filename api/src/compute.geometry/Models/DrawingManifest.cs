@@ -158,6 +158,39 @@ namespace Define.Api
                 });
             }
 
+            var largeLines = new List<Polyline>();
+
+            for (var i = 0; i < leftEdge.SegmentCount; i++)
+            {
+                var lc = leftEdge.SegmentAt(i);
+                var rc = rightEdge.SegmentAt(i);
+
+                var threshold = input.Adjacent / pointCount;
+
+                if (lc.Length > threshold)
+                {
+                    var largeC = new Line(lc.From, lc.To);
+                    largeC.ExtendThroughBox(new BoundingBox(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
+                    var largeCL = new Line(largeC.From, largeC.To);
+                    var largeCR = new Line(largeC.From, largeC.To);
+
+                    var moveR = Transform.Translation(new Vector3d(0.1, 0, 0));
+                    var moveL = Transform.Translation(new Vector3d(-0.1, 0, 0));
+
+                    largeCL.Transform(moveL);
+                    largeCR.Transform(moveR);
+
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, largeCL.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, largeCR.To }));
+                }
+            }
+
+            largeLines.ForEach(x =>
+            {
+                Debug.Add(RhinoPolylineToSvgar(x));
+            });
+
         }
 
         // Convert linear rhino geometry to svgar format
