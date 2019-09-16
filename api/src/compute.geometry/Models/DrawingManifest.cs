@@ -191,6 +191,21 @@ namespace Define.Api
                 Debug.Add(RhinoPolylineToSvgar(x));
             });
 
+            var proportion = leftEdge.ToNurbsCurve().GetLength() / rightEdge.ToNurbsCurve().GetLength();
+            var sL = 0.25 * input.Porosity * proportion;
+            var sR = 0.25 * input.Porosity * (1 / proportion);
+
+            var iL = new Interval(-sL / 2, sL / 2);
+            var iR = new Interval(-sR / 2, sR / 2);
+
+            var anchorL = new Plane(new Point3d(0.2 * (1 - input.Adjacent), 0.3 * (1 - input.Adjacent), 0), Vector3d.ZAxis);
+            var rectL = new Rectangle3d(anchorL, iL, iL);
+            var rotL = Transform.Rotation((90 * input.Openings) * (Math.PI / 180), anchorL.Origin);
+            var stretchL = Transform.Scale(anchorL, 1, 1 + input.Porosity, 1);
+            rectL.Transform(rotL);
+            rectL.Transform(stretchL);
+
+            Debug.Add(RhinoPolylineToSvgar(rectL.ToPolyline()));
         }
 
         // Convert linear rhino geometry to svgar format

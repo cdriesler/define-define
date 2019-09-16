@@ -6,7 +6,7 @@
     <div 
     class="card__values__val" 
     v-for="(i, index) in inputs" 
-    v-show="i != 'tutorial'"
+    v-show="categories[index] != 'tutorial'"
     :key="iid + index" 
     :style="{ backgroundColor: colorFromVal(i)}"
     :class="{'card__values__val--active' : isActive}">
@@ -99,13 +99,16 @@ export default Vue.extend({
         return {
             inputs: [] as number[],
             destination: '',
+            categories: [] as string[],
+            
         }
     },
     created() {
         this.destination = `${process.env.VUE_APP_FCT_URL}/in/${this.iid}`
         this.$http.get(this.destination)
         .then(x => {
-            Object.keys(x.data).sort().forEach(y => {
+            this.categories = Object.keys(x.data).sort();
+            this.categories.forEach(y => {
                 this.inputs.push(Math.round(+x.data[y] * 100));
             })
         });
