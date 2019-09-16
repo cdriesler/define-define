@@ -9,8 +9,14 @@ namespace Define.Api
 {
     public class DrawingManifest
     {
-        // Drawing information
+        // All curves
         public List<List<double>> Debug { get; set; } = new List<List<double>>();
+
+        // Grouped curves
+        public List<List<double>> Edges { get; set; } = new List<List<double>>();
+        public List<List<double>> Extensions { get; set; } = new List<List<double>>();
+        public List<List<double>> Parallels { get; set; } = new List<List<double>>();
+        public List<List<double>> Holes { get; set; } = new List<List<double>>();
 
         /// <summary>
         /// Given an input manifest of named values between zero and one, generate a drawing.
@@ -70,6 +76,9 @@ namespace Define.Api
             Debug.Add(RhinoPolylineToSvgar(leftEdge));
             Debug.Add(RhinoPolylineToSvgar(rightEdge));
 
+            Edges.Add(RhinoPolylineToSvgar(leftEdge));
+            Edges.Add(RhinoPolylineToSvgar(rightEdge));
+
             // Extend line segments
             var lex = new List<Line>();
             var rex = new List<Line>();
@@ -119,6 +128,9 @@ namespace Define.Api
             {
                 Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
                 Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
+
+                Extensions.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
+                Extensions.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
             }
 
             for (var i = 0; i < movedLex.Count; i+=2)
@@ -155,6 +167,7 @@ namespace Define.Api
                 allExtensions.ForEach(x =>
                 {
                     Debug.Add(RhinoPolylineToSvgar(x));
+                    Extensions.Add(RhinoPolylineToSvgar(x));
                 });
             }
 
@@ -207,6 +220,7 @@ namespace Define.Api
             largeLines.ForEach(x =>
             {
                 Debug.Add(RhinoPolylineToSvgar(x));
+                Parallels.Add(RhinoPolylineToSvgar(x));
             });
 
             var proportion = leftEdge.ToNurbsCurve().GetLength() / rightEdge.ToNurbsCurve().GetLength();
@@ -257,9 +271,11 @@ namespace Define.Api
             allRects.ForEach(x =>
             {
                 Debug.Add(RhinoPolylineToSvgar(x));
+                Holes.Add(RhinoPolylineToSvgar(x));
                 var mx = x.Duplicate();
                 mx.Transform(mirror);
                 Debug.Add(RhinoPolylineToSvgar(mx));
+                Holes.Add(RhinoPolylineToSvgar(mx));
             });
 
         }
