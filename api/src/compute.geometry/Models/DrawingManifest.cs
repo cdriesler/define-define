@@ -35,7 +35,7 @@ namespace Define.Api
 
             var r = new Random(Convert.ToInt32(input.Tutorial * 100));
 
-            var rotate = Transform.Rotation((input.Openings * 90) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
+            var rotate = Transform.Rotation((input.Openings * 30) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
 
             for (var i = 1; i < pointCount; i++)
             {
@@ -76,11 +76,13 @@ namespace Define.Api
                 var cL = leftEdge.SegmentAt(i);
                 var cR = rightEdge.SegmentAt(i);
 
-                cL.Extend(l, l);
-                cR.Extend(l, l);
+                var cLextended = new Line(cL.From, cL.To);
+                var cRextended = new Line(cR.From, cR.To);
 
-                extensions.Add(cL);
-                extensions.Add(cR);
+                extensions.Add(new Line(cL.From, cLextended.From));
+                extensions.Add(new Line(cL.To, cLextended.To));
+                extensions.Add(new Line(cR.From, cRextended.From));
+                extensions.Add(new Line(cR.To, cRextended.To));
             }
 
             extensions.ForEach(x =>
