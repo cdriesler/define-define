@@ -21,10 +21,11 @@ namespace Define.Api
             // Parse adjacent
 
             // Generate anchor points from input.Adjacent
-            var BottomLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 0, 0);
-            var TopLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 1, 0);
-            var BottomRight = new Point3d(0.5 + (0.4 * input.Adjacent), 0,0);
-            var TopRight = new Point3d(0.5 + (0.4 * input.Adjacent), 1, 0);
+            var position = 0.4 * input.Adjacent;
+            var BottomLeft = new Point3d(0.5 - position, 0, 0);
+            var TopLeft = new Point3d(0.5 - position, 1, 0);
+            var BottomRight = new Point3d(0.5 + position, 0,0);
+            var TopRight = new Point3d(0.5 + position, 1, 0);
 
             // Generate interior points from input.Openings
             var pointCount = Convert.ToInt32(Math.Round(input.Openings * 9));
@@ -37,10 +38,12 @@ namespace Define.Api
             for (var i = 1; i < pointCount; i++)
             {
                 var y = i * step;
-                var x = r.NextDouble() * (input.Openings * 0.5);
+                var x = r.NextDouble() * (input.Openings * 0.25);
 
-                leftPoints.Add(new Point3d(x, y, 0));
-                rightPoints.Add(new Point3d(x * -1, y, 0));
+                Console.WriteLine(x);
+
+                leftPoints.Add(new Point3d((0.5 - position - x), y, 0));
+                rightPoints.Add(new Point3d((0.5 + position + x), y, 0));
             }
 
             var leftEdgePoints = new List<Point3d>() { BottomLeft };
