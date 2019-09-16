@@ -25,7 +25,7 @@ export const ProtocolManifest:ProtocolStatement[] = [
     {
         index: "01",
         title: "Massing",
-        statement: "The drawing represents two adjacent and open volumetric surfaces.",
+        statement: "The drawing represents two adjacent shapes with gently banking edges.",
         overrides: [
             {
                 word: "adjacent",
@@ -33,16 +33,16 @@ export const ProtocolManifest:ProtocolStatement[] = [
                 instructions: "draw two lines that are relatively close"
             },
             {
-                word: "open",
+                word: "gently",
                 eid: "openings",
-                instructions: "draw an open angle from two lines"
+                instructions: "draw an gentle angle from two lines"
             },
         ]
     },
     {
         index: "02",
         title: "Connection",
-        statement: "The surfaces connect via disjoint extensions of large edges.",
+        statement: "The shapes connect via disjoint lines from their large edges.",
         overrides: [
             {
                 word: "disjoint",
@@ -59,7 +59,7 @@ export const ProtocolManifest:ProtocolStatement[] = [
     {
         index: "03",
         title: "Texture",
-        statement: "These surfaces are porous and have parallel ridges.",
+        statement: "These shapes are porous and enclose parallel lines.",
         overrides: [
             {
                 word: "porous",

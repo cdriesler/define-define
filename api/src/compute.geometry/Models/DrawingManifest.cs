@@ -18,25 +18,46 @@ namespace Define.Api
         /// <param name="input"></param>
         public DrawingManifest(InputManifest input)
         {
-            //Parse adjacent
+            // Parse adjacent
 
-            //Points
-            Point3d BottomLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 0, 0);
-            Point3d TopLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 1, 0);
-            Point3d BottomRight = new Point3d(0.5 + (0.4 * input.Adjacent), 0,0);
-            Point3d TopRight = new Point3d(0.5 + (0.4 * input.Adjacent), 1, 0);
+            // Generate anchor points from input.Adjacent
+            var BottomLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 0, 0);
+            var TopLeft = new Point3d(0.5 - (0.4 * input.Adjacent), 1, 0);
+            var BottomRight = new Point3d(0.5 + (0.4 * input.Adjacent), 0,0);
+            var TopRight = new Point3d(0.5 + (0.4 * input.Adjacent), 1, 0);
 
-            //Point collections
-            var leftEdgeList = new List<Point3d>() { BottomLeft, TopLeft };
-            var RightEdgeList = new List<Point3d>() { BottomRight, TopRight };
+            // Generate interior points from input.Openings
+            var pointCount = Convert.ToInt32(Math.Round(input.Openings * 9));
+            var step = 1 / pointCount;
+            var leftPoints = new List<Point3d>();
+            var rightPoints = new List<Point3d>();
+
+            var r = new Random();
+
+            for (var i = 1; i < pointCount; i++)
+            {
+                var y = i * step;
+                var x = r.NextDouble() * (input.Openings * 0.5);
+
+                leftPoints.Add(new Point3d(x, y, 0));
+                rightPoints.Add(new Point3d(x * -1, y, 0));
+            }
+
+            var leftEdgePoints = new List<Point3d>() { BottomLeft };
+            leftEdgePoints.AddRange(leftPoints);
+            leftEdgePoints.Add(TopLeft);
+
+            var rightEdgePoints = new List<Point3d>() { BottomRight };
+            rightEdgePoints.AddRange(rightPoints);
+            rightEdgePoints.Add(TopRight);
 
             //Generate polylines
-            var LeftEdge = new Polyline(leftEdgeList);
-            var RightEdge = new Polyline(RightEdgeList);
+            var leftEdge = new Polyline(leftEdgePoints);
+            var rightEdge = new Polyline(rightEdgePoints);
 
             //converting final output to svgar
-            Debug.Add(RhinoPolylineToSvgar(LeftEdge));
-            Debug.Add(RhinoPolylineToSvgar(RightEdge));
+            Debug.Add(RhinoPolylineToSvgar(leftEdge));
+            Debug.Add(RhinoPolylineToSvgar(rightEdge));
 
 
 
