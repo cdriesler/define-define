@@ -37,7 +37,7 @@ namespace Define.Api
             var r = new Random(Convert.ToInt32(input.Tutorial * 100));
 
             var rotateL = Transform.Rotation((input.Openings * 30) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
-            var rotateR = Transform.Rotation((input.Openings * -30) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent * -1, input.Adjacent * -1, 0));
+            var rotateR = Transform.Rotation((input.Openings * -30) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(1 - input.Adjacent , 1 - input.Adjacent, 0));
 
             for (var i = 1; i < pointCount; i++)
             {
