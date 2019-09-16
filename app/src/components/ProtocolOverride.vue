@@ -208,6 +208,7 @@ export default Vue.extend({
         },
         onDeploy(): void {
             let destination = `${this.uri}/in/${this.eid}`
+            console.log(destination);
             const drawingEndpoint = `${this.uri}/d`;
             this.$http.post(destination, 
             {paths: (<Svgar.Drawing>this.drawing).Layers[0].Geometry.map(x => x.Coordinates.map(y => +y.toFixed(4)))})

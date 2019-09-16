@@ -91,8 +91,8 @@ app.post('/in/:id', (req, res) => {
             cache = [];
         }
 
-        if (cache.length >= 10) {
-            keep = cache.slice(1, 10);
+        if (cache.length >= 5) {
+            keep = cache.slice(1, 5);
         }
         else {
             keep = cache;

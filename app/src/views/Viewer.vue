@@ -81,7 +81,7 @@
     left: 17px;
     top: 17px;
 
-    opacity: 0.2;
+    opacity: 0.1;
 }
 
 .artboard--previous svg g path {
@@ -95,7 +95,7 @@
         opacity: 1;
     }
     to {
-        opacity: .25;
+        opacity: .18;
     }
 }
 

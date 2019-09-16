@@ -28,7 +28,8 @@ namespace Define.Api
             var TopRight = new Point3d(0.5 + position, 1, 0);
 
             // Generate interior points from input.Openings
-            var pointCount = Convert.ToInt32(Math.Round(input.Openings * 9));
+            var pts = Convert.ToInt32(Math.Round(input.Openings * 9));
+            var pointCount = pts > 3 ? pts : 3;
             double step = 1.0 / pointCount;
             var leftPoints = new List<Point3d>();
             var rightPoints = new List<Point3d>();
@@ -70,7 +71,9 @@ namespace Define.Api
             Debug.Add(RhinoPolylineToSvgar(rightEdge));
 
             // Extend line segments
-            var extensions = new List<Line>();
+            var lex = new List<Line>();
+            var rex = new List<Line>();
+
             for (var i = 0; i < leftEdge.SegmentCount; i++)
             {
                 var l = input.Disjoint * 0.35;
@@ -87,25 +90,35 @@ namespace Define.Api
                 var cRexA = new Line(cR.From, cRextended.From);
                 var cRexB = new Line(cR.To, cRextended.To);
 
-                extensions.AddRange(new List<Line>() { cLexA, cLexB, cRexA, cRexB });
+                lex.AddRange(new List<Line>() { cLexA, cLexB });
+                rex.AddRange(new List<Line>() { cRexA, cRexB });
             }
 
-            var moved = new List<Line>();
+            var movedLex = new List<Line>();
+            var movedRex = new List<Line>();
 
-            extensions.ForEach(x =>
+            lex.ForEach(x =>
             {
                 var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.15);
 
                 x.Transform(tx);
 
-                moved.Add(x);
+                movedLex.Add(x);
             });
 
-            moved.ForEach(x =>
+            rex.ForEach(x =>
             {
-                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { ( x.From + x.To ) / 2, x.To })));
-                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { (x.From + x.To) / 2, x.From })));
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.15);
+
+                x.Transform(tx);
+
+                movedRex.Add(x);
             });
+
+            for (var i = 0; i < movedLex.Count; i++)
+            {
+
+            }
 
 
 
