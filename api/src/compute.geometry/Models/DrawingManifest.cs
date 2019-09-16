@@ -226,6 +226,8 @@ namespace Define.Api
             var rectL2 = rectL.ToPolyline().Duplicate();
             rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * 0.25));
 
+            Debug.Add(RhinoPolylineToSvgar(rectL2));
+
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
             var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
