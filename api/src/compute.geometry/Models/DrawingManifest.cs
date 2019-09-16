@@ -33,7 +33,7 @@ namespace Define.Api
             var leftPoints = new List<Point3d>();
             var rightPoints = new List<Point3d>();
 
-            var r = new Random();
+            var r = new Random(Convert.ToInt32(input.Tutorial * 100));
 
             for (var i = 1; i < pointCount; i++)
             {
@@ -52,13 +52,34 @@ namespace Define.Api
             rightEdgePoints.AddRange(rightPoints);
             rightEdgePoints.Add(TopRight);
 
-            //Generate polylines
+            // Generate polylines
             var leftEdge = new Polyline(leftEdgePoints);
             var rightEdge = new Polyline(rightEdgePoints);
 
-            //converting final output to svgar
+            // Push lines to output
             Debug.Add(RhinoPolylineToSvgar(leftEdge));
             Debug.Add(RhinoPolylineToSvgar(rightEdge));
+
+            // Extend line segments
+            var extensions = new List<Line>();
+            for (var i = 0; i < leftEdge.SegmentCount; i++)
+            {
+                var l = input.Disjoint * input.Tutorial;
+                var cL = leftEdge.SegmentAt(i);
+                var cR = rightEdge.SegmentAt(i);
+
+                cL.Extend(l, l);
+                cR.Extend(l, l);
+
+                extensions.Add(cL);
+                extensions.Add(cR);
+            }
+
+            extensions.ForEach(x =>
+            {
+                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { ( x.From + x.To ) / 2, x.To })));
+                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { (x.From + x.To) / 2, x.From })));
+            });
 
 
 

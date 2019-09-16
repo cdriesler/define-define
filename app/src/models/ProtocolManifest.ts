@@ -18,7 +18,7 @@ export const ProtocolManifest:ProtocolStatement[] = [
             {
                 word: "this",
                 eid: "tutorial",
-                instructions: "draw anything; this one does nothing",
+                instructions: "draw anything; we promise this one does nothing",
             }
         ]
     },
@@ -35,14 +35,14 @@ export const ProtocolManifest:ProtocolStatement[] = [
             {
                 word: "gently",
                 eid: "openings",
-                instructions: "draw an gentle angle from two lines"
+                instructions: "draw a wide angle from two lines"
             },
         ]
     },
     {
         index: "02",
         title: "Connection",
-        statement: "The shapes connect via disjoint lines from their large edges.",
+        statement: "The shapes connect via disjoint extensions from their large edges.",
         overrides: [
             {
                 word: "disjoint",
