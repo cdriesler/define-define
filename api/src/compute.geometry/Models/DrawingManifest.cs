@@ -72,7 +72,7 @@ namespace Define.Api
             var extensions = new List<Line>();
             for (var i = 0; i < leftEdge.SegmentCount; i++)
             {
-                var l = input.Disjoint * input.Tutorial;
+                var l = input.Disjoint * 0.35;
                 var cL = leftEdge.SegmentAt(i);
                 var cR = rightEdge.SegmentAt(i);
 
@@ -93,7 +93,7 @@ namespace Define.Api
 
             extensions.ForEach(x =>
             {
-                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.05);
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.15);
 
                 x.Transform(tx);
 
