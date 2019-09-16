@@ -45,8 +45,8 @@ namespace Define.Api
             }
 
             // Rotate middle points about the center;
-            var rotate = Transform.Rotation(input.Openings * (Math.PI / 2), new Point3d(input.Adjacent, input.Adjacent, 0));
-
+            var rotate = Transform.Rotation((input.Openings * 90) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
+            
             for (var i = 0; i < leftPoints.Count; i++)
             {
                 leftPoints[i].Transform(rotate);
