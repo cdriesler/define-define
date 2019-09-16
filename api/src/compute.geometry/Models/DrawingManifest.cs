@@ -117,16 +117,47 @@ namespace Define.Api
 
             for (var i = 0; i < movedLex.Count; i++)
             {
-
+                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
+                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
             }
 
+            for (var i = 0; i < movedLex.Count; i+=2)
+            {
+                var crvA = movedLex[i];
+                var targetA = crvA.To.X > crvA.From.X ? rightEdge.SegmentAt(i / 2).From : new Point3d(0, crvA.To.Y, 0);
 
+                var crvB = movedLex[i + 1];
+                var targetB = crvB.To.X > crvB.From.X ? rightEdge.SegmentAt(i / 2).To : new Point3d(0, crvB.To.Y, 0);
 
-         
+                var crvC = movedRex[i];
+                var targetC = crvC.To.X < crvC.From.X ? leftEdge.SegmentAt(i / 2).From : new Point3d(1, crvC.To.Y, 0);
 
+                var crvD = movedRex[i + 1];
+                var targetD = crvD.To.X < crvD.From.X ? leftEdge.SegmentAt(i / 2).To : new Point3d(1, crvD.To.Y, 0);
 
-            
-            
+                var ext = new List<Line>()
+                {
+                    new Line(crvA.To, targetA),
+                    new Line(crvB.To, targetB),
+                    new Line(crvC.To, targetC),
+                    new Line(crvD.To, targetD)
+                };
+
+                var allExtensions = new List<Polyline>();
+
+                ext.ForEach(x =>
+                {
+                    var scale = Transform.Scale(x.From, input.Disjoint);
+                    if (x.To.X > 0 && x.To.X < 1) x.Transform(scale);
+                    allExtensions.Add(new Polyline(new List<Point3d>() { x.From, x.To }));
+                });
+
+                allExtensions.ForEach(x =>
+                {
+                    Debug.Add(RhinoPolylineToSvgar(x));
+                });
+            }
+
         }
 
         // Convert linear rhino geometry to svgar format
