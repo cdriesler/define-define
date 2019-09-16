@@ -44,6 +44,15 @@ namespace Define.Api
                 rightPoints.Add(new Point3d((0.5 + position + x), y, 0));
             }
 
+            // Rotate middle points about the center;
+            var rotate = Transform.Rotation(input.Openings * (Math.PI / 2), new Point3d(input.Adjacent, input.Adjacent, 0));
+
+            for (var i = 0; i < leftPoints.Count; i++)
+            {
+                leftPoints[i].Transform(rotate);
+                rightPoints[i].Transform(rotate);
+            }
+
             var leftEdgePoints = new List<Point3d>() { BottomLeft };
             leftEdgePoints.AddRange(leftPoints);
             leftEdgePoints.Add(TopLeft);
