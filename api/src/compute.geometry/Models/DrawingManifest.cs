@@ -228,9 +228,6 @@ namespace Define.Api
             var rectL3 = rectL.ToPolyline().Duplicate();
             rectL3.Transform(Transform.Translation(rectL.Plane.YAxis * 0.5));
 
-            Debug.Add(RhinoPolylineToSvgar(rectL2));
-            Debug.Add(RhinoPolylineToSvgar(rectL3));
-
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
             var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
@@ -243,11 +240,28 @@ namespace Define.Api
             var rectR3 = rectR.ToPolyline().Duplicate();
             rectR3.Transform(Transform.Translation(rectR.Plane.YAxis * 0.5));
 
-            Debug.Add(RhinoPolylineToSvgar(rectR2));
-            Debug.Add(RhinoPolylineToSvgar(rectR3));            
+            var allRects = new List<Polyline>()
+            {
+                rectL.ToPolyline(),
+                rectL2,
+                rectL3,
+                rectR.ToPolyline(),
+                rectR2,
+                rectR3
+            };
 
-            Debug.Add(RhinoPolylineToSvgar(rectL.ToPolyline()));
-            Debug.Add(RhinoPolylineToSvgar(rectR.ToPolyline()));
+            var mPlane = Plane.WorldZX;
+            mPlane.Origin = new Point3d(0.5, 0.35 + input.Disjoint, 0);
+            var mirror = Transform.Mirror(mPlane);
+
+            allRects.ForEach(x =>
+            {
+                Debug.Add(RhinoPolylineToSvgar(x));
+                var mx = x.Duplicate();
+                mx.Transform(mirror);
+                Debug.Add(RhinoPolylineToSvgar(mx));
+            });
+
         }
 
         // Convert linear rhino geometry to svgar format
