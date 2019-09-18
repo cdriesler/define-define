@@ -2,7 +2,6 @@
     <div id="override">
         <div 
         class="input" 
-        :class="{'definition': showDefine == true}"
         ref="cv"
         @mousedown="onDown"
         @mousemove="onMove"
@@ -11,10 +10,16 @@
         @touchmove="onMove"
         @touchend="onUp"
         >
-        <div v-html="svgarPaths" v-if="showDefine == false"></div>
+            <div v-html="svgarPaths" v-if="this.status == 0"></div>
+            <div class="loading" v-if="this.status != 0">
+                <span v-if="this.status == 1 || this.status == 2">...</span>
+                <span v-if="this.status == 3" >:)</span>
+                <span v-if="this.status == 4">:(</span>
+            </div>
         </div> 
+
         <div class="definition">
-            {{instructions.toUpperCase()}}
+            {{messages[status]}}
         </div>
         <div class="actions">
             <div class="actions__button" @click="onCancel">
@@ -23,7 +28,7 @@
             <div class="actions__button divider" @click="onReset">
                 RESET
             </div>
-            <div class="actions__button divider" @click="onDeploy">
+            <div class="actions__button divider" @click="onDeploy" v-if="this.status == 0">
                 SUBMIT
             </div>
         </div>
@@ -37,6 +42,16 @@
     animation-name: appear;
     animation-duration: 0.8s;
     animation-fill-mode: forwards;
+}
+
+.loading {
+    width: 100%;
+
+    text-align: center;
+    vertical-align: middle;
+
+    color: black;
+    font-size: 50px;
 }
 
 @keyframes appear {
@@ -89,6 +104,10 @@
     border: 2px solid black;
 
     margin-top: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .actions {
@@ -129,10 +148,11 @@ import Vue from 'vue';
 import * as Svgar from 'svgar';
 
 enum Status {
-    AwaitInput, 
-    AwaitDrawing,
-    ValidDrawing,
-    InvalidDrawing
+    AwaitSubmission = 0,
+    AwaitInput = 1, 
+    AwaitDrawing = 2,
+    ValidDrawing = 3,
+    InvalidDrawing = 4
 }
 
 export default Vue.extend({
@@ -149,7 +169,18 @@ export default Vue.extend({
             size: 0,
             drawing: {},
             uri: "",
+            status: Status.AwaitSubmission,
+            messages: [] as string[]
         }
+    },
+    created() {
+        this.messages = [
+            this.instructions.toUpperCase(),
+            "DEPLOYING INPUT",
+            "GENERATING DRAWING",
+            `SUCCESSFUL SUBMISSION FROM USER ${this.$store.state.uid}`,
+            "PLEASE TRY AGAIN"
+        ]
     },
     mounted() {
         let el = (<Element>this.$refs.cv);
@@ -202,26 +233,35 @@ export default Vue.extend({
         },
         onReset(): void {
             this.coords = [];
+            this.status = Status.AwaitSubmission;
         },
         onToggleDefine(): void {
             this.showDefine = !this.showDefine;
         },
         onDeploy(): void {
             let destination = `${this.uri}/in/${this.eid}`
-            console.log(destination);
+            let pathdata = (<Svgar.Drawing>this.drawing).Layers[0].Geometry.map(x => x.Coordinates.map(y => +y.toFixed(4)));
+            
+            this.status = Status.AwaitInput;
+            this.coords = [];
+
             const drawingEndpoint = `${this.uri}/d`;
             this.$http.post(destination, 
-            {paths: (<Svgar.Drawing>this.drawing).Layers[0].Geometry.map(x => x.Coordinates.map(y => +y.toFixed(4)))})
+            {paths: pathdata})
             .then(res => {
-                console.log(res);
+                //console.log(res);
+
+                this.status = Status.AwaitDrawing;
 
                 return this.$http.post(drawingEndpoint, {uid: this.$store.state.uid, inputs: res.data.inputs, inputid: res.data.inputid});
             })
             .then(dwg => {
-                console.log(dwg);
+                this.status = Status.ValidDrawing;
+                //console.log(dwg);
             })
             .catch(error => {
-                console.log(destination);
+                this.status = Status.InvalidDrawing;
+                //console.log(destination);
                 console.log(error);
             });
         },
