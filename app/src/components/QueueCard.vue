@@ -136,7 +136,7 @@ export default Vue.extend({
             //console.log(cached);
             this.categories = Object.keys(cached.inputs).sort();
             this.categories.forEach(x => {
-                this.inputs.push(Math.round(+cached.inputs[x] * 100));
+                this.inputs.push(Math.round(+cached!.inputs[x] * 100));
             });
         }
     },

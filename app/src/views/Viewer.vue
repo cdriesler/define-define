@@ -335,7 +335,7 @@ export default Vue.extend({
             this.$http.get(this.cacheEndpoint)
             .then((x:any) => {
                 //console.log(x);
-                let staged = [];
+                let staged:Snapshot[] = [];
                 x.data.forEach((y:any) => {
                     let snap: Snapshot = {
                         fsid: y.fsid,
