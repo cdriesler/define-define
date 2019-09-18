@@ -169,8 +169,8 @@ namespace Define.Api
 
             for (var i = 0; i < movedLex.Count; i++)
             {
-                var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.05);
-                var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.05);
+                var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.15);
+                var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.15);
 
                 var segs = new List<Polyline>();
                 segs.AddRange(lexSegs);
@@ -218,7 +218,7 @@ namespace Define.Api
 
                 allExtensions.ForEach(x =>
                 {
-                    PolylineToDashedLine(x, 0.05).ForEach(y =>
+                    PolylineToDashedLine(x, 0.15).ForEach(y =>
                     {
                         Debug.Add(RhinoPolylineToSvgar(y));
                     });
@@ -249,9 +249,9 @@ namespace Define.Api
                     largeCL.Transform(moveL);
                     largeCR.Transform(moveR);
 
-                    largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCL.From.X - (0.04 * input.Parallel), largeCL.From.Y, 0), largeCL.To }));
+                    //largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCL.From.X - (0.04 * input.Parallel), largeCL.From.Y, 0), largeCL.To }));
                     largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
-                    largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCR.From.X + (0.04 * input.Parallel), largeCR.From.Y, 0), largeCR.To }));
+                    //largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCR.From.X + (0.04 * input.Parallel), largeCR.From.Y, 0), largeCR.To }));
                 }
 
                 if (rc.Length > threshold)
@@ -267,15 +267,19 @@ namespace Define.Api
                     largeCL.Transform(moveL);
                     largeCR.Transform(moveR);
 
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, new Point3d(largeCL.To.X - (0.04 * input.Parallel), largeCL.To.Y, 0) }));
+                    //largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, new Point3d(largeCL.To.X - (0.04 * input.Parallel), largeCL.To.Y, 0) }));
                     largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, new Point3d(largeCR.To.X + (0.04 * input.Parallel), largeCR.To.Y, 0) }));
+                    //largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, new Point3d(largeCR.To.X + (0.04 * input.Parallel), largeCR.To.Y, 0) }));
                 }
             }
 
             largeLines.ForEach(x =>
             {
-                //Debug.Add(RhinoPolylineToSvgar(x));
+                PolylineToDashedLine(x, 0.02).ForEach(y =>
+                {
+                    Debug.Add(RhinoPolylineToSvgar(y));
+                });
+
                 //Parallels.Add(RhinoPolylineToSvgar(x));
             });
 
@@ -357,13 +361,13 @@ namespace Define.Api
                 var x = line.SegmentAt(i);
 
                 var seg = x.ToNurbsCurve();
-                var step = Math.Round(seg.GetLength() / size);
-                if (step % 2 != 0)
+                var steps = Math.Round(seg.GetLength() / size);
+                if (steps % 2 != 0)
                 {
-                    step += 1;
+                    steps += 1;
                 }
 
-                for (var j = 0; j < step; j += 2)
+                for (var j = 0; j < steps; j += 2)
                 {
                     dashes.Add(new Polyline(new List<Point3d>() { new Point3d(seg.PointAtNormalizedLength(j * size)), new Point3d(seg.PointAtNormalizedLength((j + 1) * size)) }));
                 }
