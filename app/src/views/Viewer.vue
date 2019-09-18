@@ -215,6 +215,10 @@ export default Vue.extend({
     },
     computed: {
         svg(): string {
+            if (this.activeDrawing.Debug == undefined) {
+                return '';
+            }
+
             let data:DrawingManifest = this.activeDrawing;
 
             if (data.Debug == undefined) {
@@ -296,7 +300,7 @@ export default Vue.extend({
                 let dest = `${this.uri}/d/${this.activeSnapshot.did}`
 
                 this.updateStoredDrawings();
-                this.activeDrawing = {};
+                this.activeDrawing = new DrawingManifest({});
 
                 this.$http.get(dest)
                 .then(dwg => {
