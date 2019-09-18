@@ -128,7 +128,7 @@ namespace Define.Api
 
             for (var i = 0; i < leftEdge.SegmentCount; i++)
             {
-                var l = input.Disjoint * 0.30;
+                var l = input.Disjoint * 0.15;
                 var cL = leftEdge.SegmentAt(i);
                 var cR = rightEdge.SegmentAt(i);
 
@@ -169,8 +169,17 @@ namespace Define.Api
 
             for (var i = 0; i < movedLex.Count; i++)
             {
-                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
-                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
+                var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.03);
+                var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.03);
+
+                var segs = new List<Polyline>();
+                segs.AddRange(lexSegs);
+                segs.AddRange(rexSegs);
+
+                segs.ForEach(x =>
+                {
+                    Debug.Add(RhinoPolylineToSvgar(x));
+                });
 
                 //Extensions.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
                 //Extensions.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
@@ -209,7 +218,11 @@ namespace Define.Api
 
                 allExtensions.ForEach(x =>
                 {
-                    Debug.Add(RhinoPolylineToSvgar(x));
+                    PolylineToDashedLine(x, 0.03).ForEach(y =>
+                    {
+                        Debug.Add(RhinoPolylineToSvgar(y));
+                    });
+
                     //Extensions.Add(RhinoPolylineToSvgar(x));
                 });
             }
@@ -332,6 +345,29 @@ namespace Define.Api
                 //Holes.Add(RhinoPolylineToSvgar(mx));
             });
 
+        }
+
+        // Convert Polyline to dashed line
+        private List<Polyline> PolylineToDashedLine(Polyline line, double size)
+        {
+            var dashes = new List<Polyline>();
+
+            line.GetSegments().ToList().ForEach(x =>
+            {
+                var seg = x.ToNurbsCurve();
+                var step = Math.Round(seg.GetLength() / size);
+                if (step % 2 != 0)
+                {
+                    step += 1;
+                }
+
+                for (var i = 0; i < step; i += 2)
+                {
+                    dashes.Add(new Polyline(new List<Point3d>() { new Point3d(seg.PointAtNormalizedLength(i * step)), new Point3d(seg.PointAtNormalizedLength((i + 1) * step)) }));
+                }
+            });
+
+            return dashes;
         }
 
         // Convert linear rhino geometry to svgar format
