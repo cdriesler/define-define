@@ -239,9 +239,9 @@ namespace Define.Api
                 var lc = leftEdge.SegmentAt(i);
                 var rc = rightEdge.SegmentAt(i);
 
-                var threshold = input.Largethreshold / ( pointCount / 2 );
+                var threshold = input.Largethreshold;
 
-                if (lc.Length > threshold)
+                if ((i / leftEdge.SegmentCount) > threshold)
                 {
                     var largeC = new Line(lc.From, lc.To);
                     largeC.ExtendThroughBox(new BoundingBox(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
@@ -259,7 +259,7 @@ namespace Define.Api
                     //largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCR.From.X + (0.04 * input.Parallel), largeCR.From.Y, 0), largeCR.To }));
                 }
 
-                if (rc.Length > threshold)
+                if ((i / leftEdge.SegmentCount) < threshold)
                 {
                     var largeC = new Line(rc.From, rc.To);
                     largeC.ExtendThroughBox(new BoundingBox(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
@@ -303,9 +303,9 @@ namespace Define.Api
             rectL.Transform(stretchL);
 
             var rectL2 = rectL.ToPolyline().Duplicate();
-            rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * -0.25));
+            rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * -0.2));
             var rectL3 = rectL.ToPolyline().Duplicate();
-            rectL3.Transform(Transform.Translation(rectL.Plane.YAxis * -0.5));
+            rectL3.Transform(Transform.Translation(rectL.Plane.YAxis * -0.4));
 
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
@@ -315,9 +315,9 @@ namespace Define.Api
             rectR.Transform(stretchR);
 
             var rectR2 = rectR.ToPolyline().Duplicate();
-            rectR2.Transform(Transform.Translation(rectR.Plane.YAxis * 0.25));
+            rectR2.Transform(Transform.Translation(rectR.Plane.YAxis * 0.2));
             var rectR3 = rectR.ToPolyline().Duplicate();
-            rectR3.Transform(Transform.Translation(rectR.Plane.YAxis * 0.5));
+            rectR3.Transform(Transform.Translation(rectR.Plane.YAxis * 0.4));
 
             var allRects = new List<Polyline>()
             {
