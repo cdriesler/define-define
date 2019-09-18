@@ -239,7 +239,7 @@ namespace Define.Api
                 var lc = leftEdge.SegmentAt(i);
                 var rc = rightEdge.SegmentAt(i);
 
-                var threshold = input.Adjacent / pointCount;
+                var threshold = input.Largethreshold / ( pointCount / 2 );
 
                 if (lc.Length > threshold)
                 {
@@ -254,8 +254,8 @@ namespace Define.Api
                     largeCL.Transform(moveL);
                     largeCR.Transform(moveR);
 
-                    //largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCL.From.X - (0.04 * input.Parallel), largeCL.From.Y, 0), largeCL.To }));
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCL.From.X - (0.04 * input.Parallel), largeCL.From.Y, 0), largeCL.To }));
+                    //largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
                     //largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCR.From.X + (0.04 * input.Parallel), largeCR.From.Y, 0), largeCR.To }));
                 }
 
@@ -273,8 +273,8 @@ namespace Define.Api
                     largeCR.Transform(moveR);
 
                     //largeLines.Add(new Polyline(new List<Point3d>() { largeCL.From, new Point3d(largeCL.To.X - (0.04 * input.Parallel), largeCL.To.Y, 0) }));
-                    largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
-                    //largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, new Point3d(largeCR.To.X + (0.04 * input.Parallel), largeCR.To.Y, 0) }));
+                    //largeLines.Add(new Polyline(new List<Point3d>() { largeC.From, largeC.To }));
+                    largeLines.Add(new Polyline(new List<Point3d>() { largeCR.From, new Point3d(largeCR.To.X + (0.04 * input.Parallel), largeCR.To.Y, 0) }));
                 }
             }
 
