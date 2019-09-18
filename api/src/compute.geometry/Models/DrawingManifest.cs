@@ -169,8 +169,8 @@ namespace Define.Api
 
             for (var i = 0; i < movedLex.Count; i++)
             {
-                var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.03);
-                var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.03);
+                var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.05);
+                var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.05);
 
                 var segs = new List<Polyline>();
                 segs.AddRange(lexSegs);
@@ -218,7 +218,7 @@ namespace Define.Api
 
                 allExtensions.ForEach(x =>
                 {
-                    PolylineToDashedLine(x, 0.03).ForEach(y =>
+                    PolylineToDashedLine(x, 0.05).ForEach(y =>
                     {
                         Debug.Add(RhinoPolylineToSvgar(y));
                     });
@@ -352,8 +352,10 @@ namespace Define.Api
         {
             var dashes = new List<Polyline>();
 
-            line.GetSegments().ToList().ForEach(x =>
+            for (var i = 0; i < line.SegmentCount; i++)
             {
+                var x = line.SegmentAt(i);
+
                 var seg = x.ToNurbsCurve();
                 var step = Math.Round(seg.GetLength() / size);
                 if (step % 2 != 0)
@@ -361,11 +363,11 @@ namespace Define.Api
                     step += 1;
                 }
 
-                for (var i = 0; i < step; i += 2)
+                for (var j = 0; j < step; j += 2)
                 {
-                    dashes.Add(new Polyline(new List<Point3d>() { new Point3d(seg.PointAtNormalizedLength(i * size)), new Point3d(seg.PointAtNormalizedLength((i + 1) * size)) }));
+                    dashes.Add(new Polyline(new List<Point3d>() { new Point3d(seg.PointAtNormalizedLength(j * size)), new Point3d(seg.PointAtNormalizedLength((j + 1) * size)) }));
                 }
-            });
+            }
 
             return dashes;
         }
