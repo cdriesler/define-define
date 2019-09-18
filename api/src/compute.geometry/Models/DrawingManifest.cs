@@ -89,7 +89,9 @@ namespace Define.Api
 
             var leftThicken2 = new Polyline(leftEdgePoints);
             leftThicken2.Transform(thickenL);
+            leftThicken2.Transform(thickenL);
             var rightThicken2 = new Polyline(rightEdgePoints);
+            rightThicken2.Transform(thickenR);
             rightThicken2.Transform(thickenR);
 
             Debug.Add(RhinoPolylineToSvgar(leftThicken2));
@@ -126,7 +128,7 @@ namespace Define.Api
 
             for (var i = 0; i < leftEdge.SegmentCount; i++)
             {
-                var l = input.Disjoint * 0.35;
+                var l = input.Disjoint * 0.30;
                 var cL = leftEdge.SegmentAt(i);
                 var cR = rightEdge.SegmentAt(i);
 
@@ -308,11 +310,12 @@ namespace Define.Api
             var allRectsThickened = new List<Polyline>(allRects);
             allRectsThickened.ForEach(x =>
             {
-                x.Transform(thickenL);
-                allRects.Add(x);
-                x.Transform(thickenR);
-                x.Transform(thickenR);
-                allRects.Add(x);
+                var left = new Polyline(x);
+                left.Transform(thickenL);
+                allRects.Add(left);
+                var right = new Polyline(x);
+                right.Transform(thickenR);
+                allRects.Add(right);
             });
 
             var mPlane = Plane.WorldZX;
