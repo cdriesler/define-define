@@ -76,8 +76,8 @@ namespace Define.Api
             Debug.Add(RhinoPolylineToSvgar(rightEdge));
 
             // Thicken polylines
-            var thickenL = Transform.Translation(new Vector3d(-0.01, 0, 0));
-            var thickenR = Transform.Translation(new Vector3d(0.01, 0, 0));
+            var thickenL = Transform.Translation(new Vector3d(-0.001, 0, 0));
+            var thickenR = Transform.Translation(new Vector3d(0.001, 0, 0));
 
             var leftThicken = new Polyline(leftEdgePoints);
             leftThicken.Transform(thickenL);
@@ -88,8 +88,8 @@ namespace Define.Api
             Debug.Add(RhinoPolylineToSvgar(rightThicken));
 
             // Offset polylines
-            var offsetL = Transform.Translation(new Vector3d(-0.03, 0, 0));
-            var offsetR = Transform.Translation(new Vector3d(0.03, 0, 0));
+            var offsetL = Transform.Translation(new Vector3d(-0.01, 0, 0));
+            var offsetR = Transform.Translation(new Vector3d(0.01, 0, 0));
 
             var leftOffset = new Polyline(leftEdgePoints);
             leftOffset.Transform(offsetL);
@@ -131,7 +131,7 @@ namespace Define.Api
 
             lex.ForEach(x =>
             {
-                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.15);
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.2);
 
                 x.Transform(tx);
 
@@ -140,7 +140,7 @@ namespace Define.Api
 
             rex.ForEach(x =>
             {
-                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.15);
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.2);
 
                 x.Transform(tx);
 
@@ -255,7 +255,7 @@ namespace Define.Api
 
             var anchorL = new Plane(new Point3d(0.2 * (1 - input.Adjacent), 0.3 * (1 - input.Adjacent), 0), Vector3d.ZAxis);
             var rectL = new Rectangle3d(anchorL, iL, iL);
-            var rotL = Transform.Rotation((90 * input.Openings) * (Math.PI / 180), anchorL.Origin);
+            var rotL = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorL.Origin);
             var stretchL = Transform.Scale(anchorL, 1, 1 + (input.Porosity * proportion), 1);
             rectL.Transform(rotL);
             rectL.Transform(stretchL);
@@ -267,7 +267,7 @@ namespace Define.Api
 
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
-            var rotR = Transform.Rotation((90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
+            var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
             var stretchR = Transform.Scale(anchorR, 1, 1 + (input.Porosity * (1 / proportion)), 1);
             rectR.Transform(rotR);
             rectR.Transform(stretchR);
