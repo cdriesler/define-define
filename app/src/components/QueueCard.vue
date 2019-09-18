@@ -10,7 +10,7 @@
     :key="iid + index" 
     :style="{ backgroundColor: colorFromVal(i)}"
     :class="{'card__values__val--active' : isActive}">
-        <span v-show="isActive">{{i}}</span>
+        <span v-show="isActive">{{padLeft(i, 3)}}</span>
     </div>
 </div>
 </template>
@@ -126,6 +126,16 @@ export default Vue.extend({
 
                 return color;
             }
+        },
+        padLeft(val: string, length: number): string {
+            var str = "" + val
+            var pad = ""
+
+            for (let i = 0; i < length; i++) {
+                pad = pad + '0';
+            }
+
+            return pad.substring(0, pad.length - str.length) + str;
         }
     }
 })
