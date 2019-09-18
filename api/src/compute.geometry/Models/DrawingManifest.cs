@@ -241,7 +241,7 @@ namespace Define.Api
 
                 var threshold = input.Largethreshold;
 
-                if ((i / leftEdge.SegmentCount) > threshold)
+                if (lc.ToNurbsCurve().GetLength() > threshold / 2)
                 {
                     var largeC = new Line(lc.From, lc.To);
                     largeC.ExtendThroughBox(new BoundingBox(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
@@ -259,7 +259,7 @@ namespace Define.Api
                     //largeLines.Add(new Polyline(new List<Point3d>() { new Point3d(largeCR.From.X + (0.04 * input.Parallel), largeCR.From.Y, 0), largeCR.To }));
                 }
 
-                if ((i / leftEdge.SegmentCount) > threshold)
+                if (rc.ToNurbsCurve().GetLength() > threshold / 2)
                 {
                     var largeC = new Line(rc.From, rc.To);
                     largeC.ExtendThroughBox(new BoundingBox(new Point3d(0, 0, 0), new Point3d(1, 1, 1)));
