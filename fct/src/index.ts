@@ -199,6 +199,7 @@ app.get('/d/:id', (req, res) => {
 interface DrawingCacheMap {
     fsid: string;
     uid: string;
+    timestamp: number,
     input_id: string;
     drawing_id: string;
 }
@@ -215,12 +216,13 @@ app.get('/d', (req, res) => {
 
         return Promise.all(promises);
     })
-    .then(c => {
+    .then((c:FirebaseFirestore.DocumentSnapshot[]) => {
         let latest: DrawingCacheMap[] = [];
         
         c.forEach(x => {
             let update: DrawingCacheMap = {
                 fsid: x.id,
+                timestamp: x.createTime ? x.createTime.seconds : 0,
                 uid: x.get("user_id"),
                 input_id: x.get("input_id"),
                 drawing_id: x.get("drawing_id"),

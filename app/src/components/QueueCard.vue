@@ -92,6 +92,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import InputSnapshot from '../models/InputSnapshot';
+
 export default Vue.extend({
     name: "queue-card",
     props: ["uid", "iid", "isActive"],
@@ -104,14 +106,39 @@ export default Vue.extend({
         }
     },
     created() {
-        this.destination = `${process.env.VUE_APP_FCT_URL}/in/${this.iid}`
-        this.$http.get(this.destination)
-        .then(x => {
-            this.categories = Object.keys(x.data).sort();
-            this.categories.forEach(y => {
-                this.inputs.push(Math.round(+x.data[y] * 100));
-            })
-        });
+        // Attempt to grab from store
+        var cache: InputSnapshot[] = this.$store.state.queue;
+
+        var cached = cache.find(x => x.iid == this.iid);
+
+        if (cached == undefined) {
+            console.log("Not in cache, calling api!")
+            this.destination = `${process.env.VUE_APP_FCT_URL}/in/${this.iid}`
+            this.$http.get(this.destination)
+            .then(x => {
+                this.categories = Object.keys(x.data).sort();
+                this.categories.forEach(y => {
+                    this.inputs.push(Math.round(+x.data[y] * 100));
+                });
+
+                let toStore: InputSnapshot = {
+                    iid: this.iid,
+                    inputs: x.data,
+                } 
+
+                //console.log(toStore);
+
+                this.$store.commit("addToQueue", toStore);
+            });
+        }
+        else {
+            console.log("Data retrieved from cache")
+            //console.log(cached);
+            this.categories = Object.keys(cached.inputs).sort();
+            this.categories.forEach(x => {
+                this.inputs.push(Math.round(+cached.inputs[x] * 100));
+            });
+        }
     },
     methods: {
         colorFromVal(val: number): string {

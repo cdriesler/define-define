@@ -172,14 +172,8 @@
 import Vue from 'vue'
 import QueueCard from '../components/QueueCard.vue';
 import DrawingManifest from '../models/DrawingManifest';
+import Snapshot from '../models/Snapshot';
 import { Drawing, Layer, State, GeometryElement, StyleBuilder, PolylineBuilder } from 'svgar';
-
-interface Snapshot {
-    fsid: string,
-    uid: string,
-    iid: string,
-    did: string,
-}
 
 export default Vue.extend({
     name: "viewer",
@@ -304,18 +298,17 @@ export default Vue.extend({
 
                 this.$http.get(dest)
                 .then(dwg => {
-                    //console.log(dwg.data);
-                    
                     this.activeDrawing = new DrawingManifest(dwg.data);
-                    //console.log(this.activeDrawing);
+
+                    //Delete consumed cache data from store
+                    this.$store.commit("removeFromQueue", this.activeSnapshot.iid);
 
                     //Delete consumed doc from drawing_cache on firestore.
                     let del = `${this.uri}/d/${this.cache[0].fsid}`
                     return this.$http.delete(del)
                 })
                 .then(() => {
-                    // Delete consumed snapshot from local this.cache
-                    
+                    // Do nothing                 
                 })
                 .catch(err => {
                     console.log(err.message);
@@ -341,16 +334,27 @@ export default Vue.extend({
         updateCache(): void {
             this.$http.get(this.cacheEndpoint)
             .then((x:any) => {
+                //console.log(x);
+                let staged = [];
                 x.data.forEach((y:any) => {
                     let snap: Snapshot = {
                         fsid: y.fsid,
+                        timestamp: y.timestamp,
                         uid: y.uid,
                         iid: y.input_id,
                         did: y.drawing_id
                     }
                     if (!this.cache.map(x => x.did).includes(snap.did)) {
-                        this.cache.push(snap);
+                        staged.push(snap);
                     }
+                })
+
+                staged.sort(function (a, b) {
+                    return a.timestamp - b.timestamp;
+                });
+
+                staged.forEach(y => {
+                    this.cache.push(y);
                 })
             })
             .catch(err => {
@@ -358,16 +362,18 @@ export default Vue.extend({
             })
         },
         updateStoredDrawings(): void {
-            if (this.storedDrawings.length >= 4) {
-                let keep = this.storedDrawings.slice(1, 4);
+            this.storedDrawings = [this.activeSvg];
 
-                this.storedDrawings = [
-                    this.activeSvg,
-                ]
-            }
-            else {
-                this.storedDrawings.push(this.activeSvg);
-            }
+            // if (this.storedDrawings.length >= 1) {
+            //     let keep = this.storedDrawings.slice(1, 4);
+
+            //     this.storedDrawings = [
+            //         this.activeSvg,
+            //     ]
+            // }
+            // else {
+            //     this.storedDrawings.push(this.activeSvg);
+            // }
         }
     }
 })
