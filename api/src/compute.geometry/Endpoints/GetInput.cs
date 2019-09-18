@@ -254,7 +254,7 @@ namespace Define.Api
                 crvs.ForEach(x =>
                 {
                     var c = x.ToNurbsCurve();
-                    angles.Add(Vector3d.VectorAngle(Vector3d.XAxis, new Vector3d(c.PointAtEnd - c.PointAtStart)));
+                    angles.Add(Math.Abs(Vector3d.VectorAngle(Vector3d.XAxis, new Vector3d(c.PointAtEnd - c.PointAtStart))));
                 });
 
                 angles.Sort();

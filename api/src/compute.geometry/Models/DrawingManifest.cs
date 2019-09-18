@@ -41,8 +41,8 @@ namespace Define.Api
 
             var r = new Random(Convert.ToInt32(input.Tutorial * 100));
 
-            var rotateL = Transform.Rotation((input.Openings * 30) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
-            var rotateR = Transform.Rotation((input.Openings * -30) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(1 - input.Adjacent , 1 - input.Adjacent, 0));
+            var rotateL = Transform.Rotation((input.Parallel * 10) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(input.Adjacent, input.Adjacent, 0));
+            var rotateR = Transform.Rotation((input.Parallel * -10) * (Math.PI / 180), Vector3d.ZAxis, new Point3d(1 - input.Adjacent , 1 - input.Adjacent, 0));
 
             for (var i = 1; i < pointCount; i++)
             {
@@ -52,8 +52,8 @@ namespace Define.Api
                 var ptLeft = new Point3d((0.5 - position - x), y, 0);
                 var ptRight = new Point3d((0.5 + position + x), y, 0);
 
-                //ptLeft.Transform(rotateL);
-                //ptRight.Transform(rotateR);
+                ptLeft.Transform(rotateL);
+                ptRight.Transform(rotateR);
 
                 leftPoints.Add(ptLeft);
                 rightPoints.Add(ptRight);
@@ -169,17 +169,20 @@ namespace Define.Api
 
             for (var i = 0; i < movedLex.Count; i++)
             {
-                var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.15);
-                var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.15);
+                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
+                Debug.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
 
-                var segs = new List<Polyline>();
-                segs.AddRange(lexSegs);
-                segs.AddRange(rexSegs);
+                //var lexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To }), 0.15);
+                //var rexSegs = PolylineToDashedLine(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To }), 0.15);
 
-                segs.ForEach(x =>
-                {
-                    Debug.Add(RhinoPolylineToSvgar(x));
-                });
+                //var segs = new List<Polyline>();
+                //segs.AddRange(lexSegs);
+                //segs.AddRange(rexSegs);
+
+                //segs.ForEach(x =>
+                //{
+                //    Debug.Add(RhinoPolylineToSvgar(x));
+                //});
 
                 //Extensions.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedLex[i].From, movedLex[i].To })));
                 //Extensions.Add(RhinoPolylineToSvgar(new Polyline(new List<Point3d>() { movedRex[i].From, movedRex[i].To })));
@@ -218,10 +221,12 @@ namespace Define.Api
 
                 allExtensions.ForEach(x =>
                 {
-                    PolylineToDashedLine(x, 0.15).ForEach(y =>
-                    {
-                        Debug.Add(RhinoPolylineToSvgar(y));
-                    });
+                    Debug.Add(RhinoPolylineToSvgar(x));
+
+                    //PolylineToDashedLine(x, 0.15).ForEach(y =>
+                    //{
+                    //    Debug.Add(RhinoPolylineToSvgar(y));
+                    //});
 
                     //Extensions.Add(RhinoPolylineToSvgar(x));
                 });
@@ -292,7 +297,7 @@ namespace Define.Api
 
             var anchorL = new Plane(new Point3d(0.2 * (1 - input.Adjacent), 0.3 * (1 - input.Adjacent), 0), Vector3d.ZAxis);
             var rectL = new Rectangle3d(anchorL, iL, iL);
-            var rotL = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorL.Origin);
+            var rotL = Transform.Rotation((-90 * input.Parallel) * (Math.PI / 180), anchorL.Origin);
             var stretchL = Transform.Scale(anchorL, 1, 1 + (input.Porosity * proportion), 1);
             rectL.Transform(rotL);
             rectL.Transform(stretchL);
@@ -304,7 +309,7 @@ namespace Define.Api
 
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
-            var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
+            var rotR = Transform.Rotation((-90 * input.Parallel) * (Math.PI / 180), anchorR.Origin);
             var stretchR = Transform.Scale(anchorR, 1, 1 + (input.Porosity * (1 / proportion)), 1);
             rectR.Transform(rotR);
             rectR.Transform(stretchR);
@@ -336,7 +341,7 @@ namespace Define.Api
             });
 
             var mPlane = Plane.WorldZX;
-            mPlane.Origin = new Point3d(0.5, input.Disjoint, 0);
+            mPlane.Origin = new Point3d(0.5, 0.5, 0);
             var mirror = Transform.Mirror(mPlane);
 
             allRects.ForEach(x =>
