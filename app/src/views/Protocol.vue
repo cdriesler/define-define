@@ -40,6 +40,7 @@
 <style>
 #protocol {
     text-align: justify;
+    max-width: 800px;
 }
 
 .landing {

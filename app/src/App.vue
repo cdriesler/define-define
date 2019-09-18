@@ -1,14 +1,14 @@
 <template>
   <div class="app" id="app">
     <div class="header">
-      DEFINE-DEFINE
+      DEFINE-DEFINE <span class="warning"> : FOR BEST RESULTS, VISIT ON YOUR PHONE</span>
     </div>
     <div class="content">
       <router-view/>
     </div>
     <div class="footer">
       <div class="footer__version">
-        V1.1.2
+        V1.2.1
       </div>
       <div class="footer__uid">
         UID: {{uid}}
@@ -68,6 +68,10 @@
   margin-right: 15px;
   flex-grow: 1;
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .footer {
@@ -121,6 +125,16 @@
 .footer__source a {
   text-decoration: none;
   color: black;
+}
+
+.warning {
+  display: none;
+}
+
+@media screen and (min-width: 800px) {
+  .warning {
+    display: inline;
+  }
 }
 </style>
 

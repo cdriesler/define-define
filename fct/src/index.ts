@@ -256,13 +256,13 @@ app.post('/d', (req, res) => {
 
         const dwgdata:any = dwg;
 
-        console.log(dwg)
+        //console.log(dwg)
     
         Object.keys(dwgdata).forEach(x => {
             dwgres[x] = dwgdata[x];
         })
 
-        console.log(dwgres);
+        //console.log(dwgres);
 
         return db.collection("drawing_history").doc(docid).set({uid: req.body.uid, input: req.body.inputid});     
     })

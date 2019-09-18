@@ -7,10 +7,10 @@
             </div>
         </div>
         <div class="queue">
-            <div class="queue__header">
+            <div class="queue__header" @click="goToProtocol">
                 https://define-define.web.app
             </div>
-            <div class="queue_timer">
+            <div class="queue__timer">
             </div>
             <queue-card
             v-for="(entry, index) in cache"
@@ -120,7 +120,12 @@
     border: 2px solid black;
 }
 
-.queue_timer {
+.queue__header:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.queue__timer {
     margin-bottom: 15px;
     border-bottom: 2px solid black;
 
@@ -163,6 +168,15 @@
         width: calc(100vh - 30px);
         margin-left: 15px;
         margin-right: 15px;
+    }
+
+    @keyframes timer {
+        from {
+            width: 0%;
+        }
+        to {
+            width: calc(100% - 15px);
+        }
     }
 }
 
@@ -285,6 +299,10 @@ export default Vue.extend({
         },
         startConsume(): void {
             setInterval(() => this.consumeCache(), 20000);
+        },
+        goToProtocol(): void {
+            console.log("go");
+            this.$router.push('/');
         },
         consumeCache(): void {
             if (this.cache.length > 1) {
