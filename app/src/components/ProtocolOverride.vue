@@ -31,7 +31,7 @@
             <div class="actions__button divider" @click="onDeploy" v-if="this.status == 0">
                 SUBMIT
             </div>
-            <div class="actions__button divider" @click="goToViewer" v-if="this.status == 3">
+            <div class="actions__button divider view" @click="goToViewer" v-if="this.status == 3">
                 VIEW
             </div>
         </div>
@@ -55,6 +55,11 @@
 
     color: black;
     font-size: 50px;
+}
+
+.view {
+    background: black;
+    color: white;
 }
 
 @keyframes appear {

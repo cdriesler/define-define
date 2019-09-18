@@ -8,7 +8,7 @@
         </div>
         <div class="queue">
             <div class="queue__header" @click="goToProtocol">
-                https://define-define.web.app
+                <i class="material-icons">stay_current_portrait</i> &nbsp; <span class="queue__header__link"> https://define-define.web.app </span> &nbsp; <i class="material-icons">stay_current_portrait</i>
             </div>
             <div class="queue__timer">
             </div>
@@ -60,16 +60,17 @@
 }
 
 .artboard--current svg g path {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
+    stroke-dasharray: 1500;
+    stroke-dashoffset: 1500;
     animation-name: dash;
-    animation-duration: 4s;
+    animation-duration: 5s;
+    animation-timing-function: linear;
     animation-fill-mode: forwards;
 }
 
 @keyframes dash {
     from {
-        stroke-dashoffset: 1000;
+        stroke-dashoffset: 1500;
     }
     to {
         stroke-dashoffset: 0;
@@ -111,13 +112,22 @@
 
     box-sizing: border-box;
 
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+
     text-align: center;
-    line-height: 46px;
-    vertical-align: middle;
 
     margin-bottom: 15px;
 
     border: 2px solid black;
+}
+
+.queue__header__link {
+    line-height: 46px;
+    vertical-align: middle;
 }
 
 .queue__header:hover {
@@ -177,6 +187,12 @@
         to {
             width: calc(100% - 15px);
         }
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .phone {
+        display: none;
     }
 }
 

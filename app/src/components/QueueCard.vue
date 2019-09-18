@@ -52,7 +52,7 @@
 
     box-sizing: border-box;
 
-    font-size: 14px;
+    font-size: 12px;
     line-height: 46px;
     vertical-align: middle;
     text-align: center;
