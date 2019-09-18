@@ -34,8 +34,7 @@ namespace Define.Api
             var TopRight = new Point3d(0.5 + position, 1, 0);
 
             // Generate interior points from input.Openings
-            var pts = Convert.ToInt32(Math.Round(input.Openings * 9));
-            var pointCount = pts > 3 ? pts : 3;
+            var pointCount = Convert.ToInt32(Math.Round(input.Openings * 9)) + 3;
             double step = 1.0 / pointCount;
             var leftPoints = new List<Point3d>();
             var rightPoints = new List<Point3d>();
@@ -75,6 +74,30 @@ namespace Define.Api
             // Push lines to output
             Debug.Add(RhinoPolylineToSvgar(leftEdge));
             Debug.Add(RhinoPolylineToSvgar(rightEdge));
+
+            // Thicken polylines
+            var thickenL = Transform.Translation(new Vector3d(-0.01, 0, 0));
+            var thickenR = Transform.Translation(new Vector3d(0.01, 0, 0));
+
+            var leftThicken = new Polyline(leftEdgePoints);
+            leftThicken.Transform(thickenL);
+            var rightThicken = new Polyline(rightEdgePoints);
+            rightThicken.Transform(thickenR);
+
+            Debug.Add(RhinoPolylineToSvgar(leftThicken));
+            Debug.Add(RhinoPolylineToSvgar(rightThicken));
+
+            // Offset polylines
+            var offsetL = Transform.Translation(new Vector3d(-0.03, 0, 0));
+            var offsetR = Transform.Translation(new Vector3d(0.03, 0, 0));
+
+            var leftOffset = new Polyline(leftEdgePoints);
+            leftOffset.Transform(offsetL);
+            var rightOffset = new Polyline(rightEdgePoints);
+            rightOffset.Transform(offsetR);
+
+            Debug.Add(RhinoPolylineToSvgar(leftOffset));
+            Debug.Add(RhinoPolylineToSvgar(rightOffset));
 
             //Edges.Add(RhinoPolylineToSvgar(leftEdge));
             //Edges.Add(RhinoPolylineToSvgar(rightEdge));
@@ -244,7 +267,7 @@ namespace Define.Api
 
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
-            var rotR = Transform.Rotation((-90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
+            var rotR = Transform.Rotation((90 * input.Openings) * (Math.PI / 180), anchorR.Origin);
             var stretchR = Transform.Scale(anchorR, 1, 1 + (input.Porosity * (1 / proportion)), 1);
             rectR.Transform(rotR);
             rectR.Transform(stretchR);

@@ -217,59 +217,59 @@ export default Vue.extend({
         svg(): string {
             let data:DrawingManifest = this.activeDrawing;
 
-            if (data.Edges == undefined) {
+            if (data.Debug == undefined) {
                 return "";
             }
-            console.log(data);
+            // console.log(data);
             let dwg = new Drawing("main");
 
             // Compose layer geometries
-            let background = new Layer("background").AddTag("background").AddGeometry(new PolylineBuilder([0,0]).LineTo([1,0]).LineTo([1,1]).LineTo([0,1]).LineTo([0,0]).Build());
-            //dwg.AddLayer(background);
+            // let background = new Layer("background").AddTag("background").AddGeometry(new PolylineBuilder([0,0]).LineTo([1,0]).LineTo([1,1]).LineTo([0,1]).LineTo([0,0]).Build());
+            // dwg.AddLayer(background);
 
-            // let debug = new Layer("debug");
-            // data.Edges.forEach(x => {
-            //     debug.AddGeometry(new GeometryElement(x).AddTag("debug"))
-            // });
+            let debug = new Layer("debug");
+            data.Debug.forEach(x => {
+                debug.AddGeometry(new GeometryElement(x).AddTag("debug"))
+            });
             // data.Extensions.forEach(x => {
             //     debug.AddGeometry(new GeometryElement(x).AddTag("debug"))
             // });
             // data.Holes.forEach(x => {
             //     debug.AddGeometry(new GeometryElement(x).AddTag("debug"))
             // });
-            // dwg.AddLayer(debug);
+            dwg.AddLayer(debug);
 
-            let edges = new Layer("edges-l").AddTag("e");
-            data.Edges.forEach(x => {
-                edges.AddGeometry(new GeometryElement(x).AddTag("edges"));
-            });
-            dwg.AddLayer(edges);
+            // let edges = new Layer("edges-l").AddTag("e");
+            // data.Edges.forEach(x => {
+            //     edges.AddGeometry(new GeometryElement(x).AddTag("edges"));
+            // });
+            // dwg.AddLayer(edges);
 
-            let extensions = new Layer("extensions-l").AddTag("x");
-            data.Extensions.forEach(y => {
-                extensions.AddGeometry(new GeometryElement(y).AddTag("extensions"));
-            });
-            dwg.AddLayer(extensions);
+            // let extensions = new Layer("extensions-l").AddTag("x");
+            // data.Extensions.forEach(y => {
+            //     extensions.AddGeometry(new GeometryElement(y).AddTag("extensions"));
+            // });
+            // dwg.AddLayer(extensions);
 
-            let holes = new Layer("holes-l");
-            data.Holes.forEach(x => {
-                holes.AddGeometry(new GeometryElement(x).AddTag("holes"));
-            });
-            dwg.AddLayer(holes);
+            // let holes = new Layer("holes-l");
+            // data.Holes.forEach(x => {
+            //     holes.AddGeometry(new GeometryElement(x).AddTag("holes"));
+            // });
+            // dwg.AddLayer(holes);
 
-            let parallels = new Layer("parallels-l").AddTag("p");
-            data.Parallels.forEach(z => {
-                parallels.AddGeometry(new GeometryElement(z).AddTag("parallels"));
-            });
-            dwg.AddLayer(parallels);
+            // let parallels = new Layer("parallels-l").AddTag("p");
+            // data.Parallels.forEach(z => {
+            //     parallels.AddGeometry(new GeometryElement(z).AddTag("parallels"));
+            // });
+            // dwg.AddLayer(parallels);
 
             // Compose drawing style
             let style = new State("main-state")
-            //.AddStyle(new StyleBuilder("debug-style").Fill("none").Stroke("#000000").StrokeWidth("2px").Build()).Target("debug-style", "debug");
-            .AddStyle(new StyleBuilder("edges-style").Fill("none").Stroke("#000000").StrokeWidth("3px").Build()).Target("edges-style", "edges")
-            .AddStyle(new StyleBuilder("extensions-style").Fill("none").Stroke("#000000").StrokeWidth("2px").Build()).Target("extensions-style", "extensions")
-            .AddStyle(new StyleBuilder("holes-style").Fill("#dcdcdc").Stroke("#000000").StrokeWidth("4px").Build()).Target("holes-style", "holes")
-            .AddStyle(new StyleBuilder("parallels-style").Fill("none").Stroke("#000000").StrokeWidth("1px").Build()).Target("parallels-style", "parallels");
+            .AddStyle(new StyleBuilder("debug-style").Fill("none").Stroke("#000000").StrokeWidth("2px").Build()).Target("debug-style", "debug");
+            //.AddStyle(new StyleBuilder("edges-style").Fill("none").Stroke("#000000").StrokeWidth("3px").Build()).Target("edges-style", "edges")
+            //.AddStyle(new StyleBuilder("extensions-style").Fill("none").Stroke("#000000").StrokeWidth("2px").Build()).Target("extensions-style", "extensions")
+            //.AddStyle(new StyleBuilder("holes-style").Fill("#dcdcdc").Stroke("#000000").StrokeWidth("4px").Build()).Target("holes-style", "holes")
+            //.AddStyle(new StyleBuilder("parallels-style").Fill("none").Stroke("#000000").StrokeWidth("1px").Build()).Target("parallels-style", "parallels");
 
             dwg.AddState(style);
 
