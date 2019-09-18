@@ -137,6 +137,8 @@
 .statement__body--override {
     font-weight: bold;
     text-decoration: underline;
+
+    color: black;
 }
 
 .statement__body--override:hover {
@@ -173,12 +175,15 @@ export default Vue.extend({
     methods: {
         toggleOverride(word: string): void {
             if (this.activeOverrides.includes(word)) {
+                this.activeOverrides = [];
                 return;
             }
 
             this.activeOverrides = [word];
         },
         onToggleStatement(index: string): void {
+            this.activeOverrides = [];
+
             if (this.activeStatements.includes(index)) {
                 this.activeStatements = this.activeStatements.filter(x => x != index);
             }

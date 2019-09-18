@@ -8,9 +8,16 @@
     </div>
     <div class="footer">
       <div class="footer__version">
-        V1.1.0
+        V1.1.2
       </div>
-       UID: {{uid}}
+      <div class="footer__uid">
+        UID: {{uid}}
+      </div>
+      <div class="footer__source">
+        <a href="https://github.com/cdriesler/define-define">
+        &lt;/&gt;
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -96,6 +103,24 @@
   border-right: 2px solid black;
   padding-right: 5px;
   margin-right: 5px;
+}
+
+.footer__uid {
+  height: 100%;
+  flex-grow: 1;
+}
+
+.footer__source {
+  height: 100%;
+
+  border-left: 2px solid black;
+  padding-left: 5px;
+  margin-right: 5px;
+}
+
+.footer__source a {
+  text-decoration: none;
+  color: black;
 }
 </style>
 
