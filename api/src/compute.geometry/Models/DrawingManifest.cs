@@ -363,7 +363,7 @@ namespace Define.Api
 
                 for (var i = 0; i < step; i += 2)
                 {
-                    dashes.Add(new Polyline(new List<Point3d>() { new Point3d(seg.PointAtNormalizedLength(i * step)), new Point3d(seg.PointAtNormalizedLength((i + 1) * step)) }));
+                    dashes.Add(new Polyline(new List<Point3d>() { new Point3d(seg.PointAtNormalizedLength(i * size)), new Point3d(seg.PointAtNormalizedLength((i + 1) * size)) }));
                 }
             });
 
