@@ -24,30 +24,30 @@ export const ProtocolManifest:ProtocolStatement[] = [
     },
     {
         index: "01",
-        title: "Massing",
-        statement: "The drawing represents two adjacent shapes with gently banking edges.",
+        title: "Subdivision",
+        statement: "Divide a square into three even sections with two non-vertical lines.",
         overrides: [
             {
-                word: "adjacent",
+                word: "even",
                 eid: "adjacent",
-                instructions: "draw two lines that are relatively close"
+                instructions: "divide with two relatively close lines"
             },
             {
-                word: "gently",
+                word: "non-vertical",
                 eid: "openings",
-                instructions: "draw a wide angle from two lines"
+                instructions: "draw lines that aren't vertical"
             },
         ]
     },
     {
         index: "02",
         title: "Connection",
-        statement: "The shapes connect via disjoint extensions from their large edges.",
+        statement: "Connect the lines with extensions from their large segments that almost touch.",
         overrides: [
             {
-                word: "disjoint",
+                word: "almost",
                 eid: "disjoint",
-                instructions: "draw two completely unrelated lines"
+                instructions: "draw lines from the border that almost touch"
             },
             {
                 word: "large",
@@ -58,16 +58,16 @@ export const ProtocolManifest:ProtocolStatement[] = [
     },
     {
         index: "03",
-        title: "Texture",
-        statement: "These shapes are porous and enclose parallel lines.",
+        title: "Aggregation",
+        statement: "Draw a small shape in the left and right regions. Repeat them throughout.",
         overrides: [
             {
-                word: "porous",
+                word: "small",
                 eid: "porosity",
                 instructions: "draw a small shape inside a big shape",
             },
             {
-                word: "parallel",
+                word: "Repeat",
                 eid: "parallel",
                 instructions: "draw two parallel lines",
             }
