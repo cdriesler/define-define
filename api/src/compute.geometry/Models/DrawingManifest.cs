@@ -87,6 +87,14 @@ namespace Define.Api
             Debug.Add(RhinoPolylineToSvgar(leftThicken));
             Debug.Add(RhinoPolylineToSvgar(rightThicken));
 
+            var leftThicken2 = new Polyline(leftEdgePoints);
+            leftThicken2.Transform(thickenL);
+            var rightThicken2 = new Polyline(rightEdgePoints);
+            rightThicken2.Transform(thickenR);
+
+            Debug.Add(RhinoPolylineToSvgar(leftThicken2));
+            Debug.Add(RhinoPolylineToSvgar(rightThicken2));
+
             // Offset polylines
             var offsetL = Transform.Translation(new Vector3d(-0.01, 0, 0));
             var offsetR = Transform.Translation(new Vector3d(0.01, 0, 0));
@@ -98,6 +106,16 @@ namespace Define.Api
 
             Debug.Add(RhinoPolylineToSvgar(leftOffset));
             Debug.Add(RhinoPolylineToSvgar(rightOffset));
+
+            var leftOffsetThicken = new Polyline(leftEdgePoints);
+            leftOffsetThicken.Transform(offsetL);
+            leftOffsetThicken.Transform(thickenL);
+            var rightOffsetThicken = new Polyline(rightEdgePoints);
+            rightOffsetThicken.Transform(offsetR);
+            rightOffsetThicken.Transform(thickenR);
+
+            Debug.Add(RhinoPolylineToSvgar(leftOffsetThicken));
+            Debug.Add(RhinoPolylineToSvgar(rightOffsetThicken));
 
             //Edges.Add(RhinoPolylineToSvgar(leftEdge));
             //Edges.Add(RhinoPolylineToSvgar(rightEdge));
@@ -131,7 +149,7 @@ namespace Define.Api
 
             lex.ForEach(x =>
             {
-                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.2);
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.25);
 
                 x.Transform(tx);
 
@@ -140,7 +158,7 @@ namespace Define.Api
 
             rex.ForEach(x =>
             {
-                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.2);
+                var tx = Transform.Translation(new Vector3d(x.To - x.From) * 0.25);
 
                 x.Transform(tx);
 
@@ -261,9 +279,9 @@ namespace Define.Api
             rectL.Transform(stretchL);
 
             var rectL2 = rectL.ToPolyline().Duplicate();
-            rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * 0.25));
+            rectL2.Transform(Transform.Translation(rectL.Plane.YAxis * -0.25));
             var rectL3 = rectL.ToPolyline().Duplicate();
-            rectL3.Transform(Transform.Translation(rectL.Plane.YAxis * 0.5));
+            rectL3.Transform(Transform.Translation(rectL.Plane.YAxis * -0.5));
 
             var anchorR = new Plane(new Point3d(1 - (0.2 * (1 - input.Adjacent)), 1 - (0.3 * (1 - input.Adjacent)), 0), Vector3d.ZAxis);
             var rectR = new Rectangle3d(anchorR, iR, iR);
@@ -287,8 +305,18 @@ namespace Define.Api
                 rectR3
             };
 
+            var allRectsThickened = new List<Polyline>(allRects);
+            allRectsThickened.ForEach(x =>
+            {
+                x.Transform(thickenL);
+                allRects.Add(x);
+                x.Transform(thickenR);
+                x.Transform(thickenR);
+                allRects.Add(x);
+            });
+
             var mPlane = Plane.WorldZX;
-            mPlane.Origin = new Point3d(0.5, 0.35 + input.Disjoint, 0);
+            mPlane.Origin = new Point3d(0.5, input.Disjoint, 0);
             var mirror = Transform.Mirror(mPlane);
 
             allRects.ForEach(x =>
