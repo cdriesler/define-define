@@ -81,7 +81,7 @@
     left: 17px;
     top: 17px;
 
-    opacity: 0.1;
+    opacity: 0.05;
 }
 
 .artboard--previous svg g path {
@@ -95,7 +95,7 @@
         opacity: 1;
     }
     to {
-        opacity: .18;
+        opacity: .10;
     }
 }
 
@@ -295,12 +295,15 @@ export default Vue.extend({
 
                 let dest = `${this.uri}/d/${this.activeSnapshot.did}`
 
+                this.updateStoredDrawings();
+                this.activeDrawing = {};
+
                 this.$http.get(dest)
                 .then(dwg => {
-                    console.log(dwg.data);
-                    this.updateStoredDrawings();
+                    //console.log(dwg.data);
+                    
                     this.activeDrawing = new DrawingManifest(dwg.data);
-                    console.log(this.activeDrawing);
+                    //console.log(this.activeDrawing);
 
                     //Delete consumed doc from drawing_cache on firestore.
                     let del = `${this.uri}/d/${this.cache[0].fsid}`
@@ -356,9 +359,6 @@ export default Vue.extend({
 
                 this.storedDrawings = [
                     this.activeSvg,
-                    keep[0],
-                    keep[1],
-                    keep[2]
                 ]
             }
             else {

@@ -249,17 +249,20 @@ namespace Define.Api
             }
             else 
             {
-                var angles = new List<double>();
+                var slopes = new List<double>();
 
                 crvs.ForEach(x =>
                 {
                     var c = x.ToNurbsCurve();
-                    angles.Add(Math.Abs(Vector3d.VectorAngle(Vector3d.XAxis, new Vector3d(c.PointAtEnd - c.PointAtStart))));
+                    var start = c.PointAtStart;
+                    var end = c.PointAtEnd;
+
+                    slopes.Add(end.X - start.X / end.Y / start.Y);
                 });
 
-                angles.Sort();
+                slopes.Sort();
 
-                return angles.First() / angles.Last();
+                return slopes.Last() - slopes.First();
             }
         }
 
