@@ -256,6 +256,8 @@ export default Vue.extend({
             this.status = Status.AwaitInput;
             this.coords = [];
 
+            setTimeout(() => { if (this.status != Status.ValidDrawing && this.status != Status.AwaitDrawing) { this.status = Status.InvalidDrawing } }, 20000);
+
             const drawingEndpoint = `${this.uri}/d`;
             this.$http.post(destination, 
             {paths: pathdata})

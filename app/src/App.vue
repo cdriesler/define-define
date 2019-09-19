@@ -8,7 +8,7 @@
     </div>
     <div class="footer">
       <div class="footer__version">
-        V1.2.2
+        V1.2.3
       </div>
       <div class="footer__uid">
         UID: {{uid}}
