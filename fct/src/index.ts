@@ -51,6 +51,34 @@ app.get('/handshake', (req, res) => {
     });
 })
 
+// Get list of all ids of current drawing history
+app.get('/history', (req, res) => {
+    db.collection("drawing_history").listDocuments()
+    .then(x => {
+        let docs: Promise<FirebaseFirestore.DocumentSnapshot>[] = [];
+
+        x.forEach(y => {
+            docs.push(y.get())
+        });
+
+        return Promise.all(docs);
+    })
+    .then(x => {
+        let ids: string[] = [];
+
+        let sorted = x.sort(function(a, b){return a.createTime!.seconds - b.createTime!.seconds});
+
+        sorted.forEach(y => {
+            ids.push(y.id);
+        });
+
+        res.status(200).json({ids: ids});
+    })
+    .catch(err => {
+        res.status(400).json(err);
+    })
+})
+
 // Get specific input from history
 app.get('/in/:id', (req, res) => {
     db.collection("input_history").doc(req.params.id).get()

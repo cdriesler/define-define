@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Protocol from './views/Protocol.vue';
 import Viewer from './views/Viewer.vue';
+import Thanks from './views/Thanks.vue';
 
 Vue.use(Router);
 
@@ -12,7 +13,7 @@ export default new Router({
     {
       path: '/',
       name: 'protocol',
-      component: Protocol,
+      component: Thanks,
     },
     {
       path: '/output',
@@ -20,8 +21,13 @@ export default new Router({
       component: Viewer,
     },
     {
+      path: '/thanks',
+      name: 'thanks',
+      component: Thanks,
+    },
+    {
       path: '**',
-      redirect: '/'
+      redirect: '/thanks'
     }
   ],
 });

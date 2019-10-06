@@ -1,14 +1,14 @@
 <template>
   <div class="app" id="app">
     <div class="header">
-      DEFINE-DEFINE <span class="warning"> : FOR BEST RESULTS, VISIT ON YOUR PHONE</span>
+      DEFINE-DEFINE
     </div>
     <div class="content">
       <router-view/>
     </div>
     <div class="footer">
       <div class="footer__version">
-        V1.2.3
+        V1.3.0
       </div>
       <div class="footer__uid">
         UID: {{uid}}
