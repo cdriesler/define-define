@@ -16,6 +16,11 @@ export default new Router({
       component: Thanks,
     },
     {
+      path: '/input',
+      name: 'input',
+      component: Protocol,
+    },
+    {
       path: '/output',
       name: 'output',
       component: Viewer,
